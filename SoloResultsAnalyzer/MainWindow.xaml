@@ -1,0 +1,14 @@
+﻿<Window x:Class="SoloResultsAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="File:" />
+                <TextBox Text="{Binding FileName}" Width="100" />
+            </StackPanel>
+            <Button Content="Open File" Command="{Binding OpenFile}" />
+        </StackPanel>
+    </Grid>
+</Window>
