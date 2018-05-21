@@ -11,3 +11,6 @@ E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\SoloResultsAnalyzer\obj\Debu
 E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.csproj.GenerateResource.Cache
 E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.exe
 E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.pdb
+E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\bin\Debug\SoloResultsAnalyzer.exe.config
+E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.exe
+E:\Projects\SoloResultsAnalyzer\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.pdb
