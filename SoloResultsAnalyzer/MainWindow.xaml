@@ -9,6 +9,9 @@
                 <TextBox Text="{Binding FileName}" Width="100" />
             </StackPanel>
             <Button Content="Open File" Command="{Binding OpenFile}" />
+            <Button Content="Update Classes" Command="{Binding UpdateClasses}" />
+            <Button Content="Update Runs" Command="{Binding UpdateRuns}" />
+            <Button Content="Pax Report" Command="{Binding GenerateEventPaxReport}" />
         </StackPanel>
     </Grid>
 </Window>

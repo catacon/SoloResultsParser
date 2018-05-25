@@ -17,41 +17,8 @@ using System.IO;
 
 namespace SoloResultsAnalyzer
 {
-    public enum RunPenalty
-    {
-        None,
-        DNF,
-        RRN
-    }
 
-    public class Run
-    {
-        public double RawTime;
-        public double CorrectedTime;
-        public int Cones;
-        public RunPenalty Penalty;
-    }
 
-    public class CarClass
-    {
-        public string ClassName;
-        public double PaxModifier;
-    }
-
-    public class Result
-    {
-        public string Driver;
-        public string Car;
-        public CarClass Class;
-        public List<Run> Runs;
-        public double RawTime;
-        public double PaxTime;
-
-        public Result()
-        {
-            Runs = new List<Run>();
-        }
-    }
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -64,7 +31,7 @@ namespace SoloResultsAnalyzer
             DataContext = this;
         }
 
-        // Autonomous field cal procedure
+        /*
         public ICommand OpenFile
         {
             get
@@ -182,6 +149,39 @@ namespace SoloResultsAnalyzer
                     sw.Close();
                 });
             }
-        }   // End of  ICommand DataWindow_Closing
+        } 
+        */
+        public ICommand UpdateClasses
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    ClassUpdater.Update(2018, "test.csv", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
+
+        public ICommand UpdateRuns
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    RunUpdater.Update(2018, 2, @"A:\Projects\Autocross\2018 Results\Event 2\2018event02-Standard.csv", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
+
+        public ICommand GenerateEventPaxReport
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    ReportBuilder.GenerateEventPaxReport(2018, 2, @"A:\Projects\Autocross\2018 Results\PAX_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
     }
 }

@@ -1,0 +1,49 @@
+SS,Super Street,0.817
+AS,A Street,0.814
+BS,B Street,0.808
+CS,C Street,0.805
+DS,D Street,0.794
+ES,E Street,0.787
+FS,F Street,0.797
+GS,G Street,0.786
+HS,H Street,0.781
+HCS,Heritage Classic Street,0.791
+SSC,Solo Spec Coupe,0.806
+STS,Street Touring Sport,0.81
+STX,Street Touring Xtreme,0.813
+STR,Street Touring Roadster,0.823
+STU,Street Touring Ultra,0.824
+STP,Street Touring Pony,0.815
+STH,Street Touring Hot Hatch,0.811
+SSP,Super Street Prepared,0.852
+ASP,A Street Prepared,0.848
+BSP,B Street Prepared,0.846
+CSP,C Street Prepared,0.857
+DSP,D Street Prepared,0.835
+ESP,E Street Prepared,0.828
+FSP,F Street Prepared,0.819
+SSR,Super Street R-Comp,0.838
+CAM-C,Classic American Muscle Contemporary,0.816
+CAM-T,Classic American Muscle Traditional,0.807
+CAM-S,Classic American Muscle Sports,0.831
+XP,X Prepared,0.884
+BP,B Prepared,0.86
+CP,C Prepared,0.847
+DP,D Prepared,0.858
+EP,E Prepared,0.85
+FP,F Prepared,0.863
+HCR,Heritage Classic Race,0.812
+SMF,Street Modified FWD,0.839
+SM,Street Modified,0.853
+SSM,Super Street Modified,0.871
+AM,A Modified,1
+BM,B Modified,0.956
+CM,C Modified,0.89
+DM,D Modified,0.895
+EM,E Modified,0.894
+FM,F Modified,0.904
+FSAE,Formula SAE,0.958
+KM,Kart Modified,0.928
+JA,Junior Kart A,0.855
+JB,Junior Kart B,0.825
+JC,Junior Kart C,0.718
