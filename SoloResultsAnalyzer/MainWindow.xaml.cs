@@ -183,5 +183,27 @@ namespace SoloResultsAnalyzer
                 });
             }
         }
+
+        public ICommand GenerateEventRawReport
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    ReportBuilder.GenerateEventRawReport(2018, 2, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
+
+        public ICommand GenerateEventClassReport
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    ReportBuilder.GenerateEventClassReport(2018, 2, @"A:\Projects\Autocross\2018 Results\Class_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
     }
 }

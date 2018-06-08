@@ -12,6 +12,8 @@
             <Button Content="Update Classes" Command="{Binding UpdateClasses}" />
             <Button Content="Update Runs" Command="{Binding UpdateRuns}" />
             <Button Content="Pax Report" Command="{Binding GenerateEventPaxReport}" />
+            <Button Content="Raw Report" Command="{Binding GenerateEventRawReport}" />
+            <Button Content="Class Report" Command="{Binding GenerateEventClassReport}" />
         </StackPanel>
     </Grid>
 </Window>

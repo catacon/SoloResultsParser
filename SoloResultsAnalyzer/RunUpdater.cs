@@ -18,6 +18,13 @@ namespace SoloResultsAnalyzer
 
     public class Run
     {
+        public int RunNumber;
+        public string FirstName;
+        public string LastName;
+        public string Car;
+        public string ClassString;
+        public int ClassId;
+        public int ClassNumber;
         public double RawTime;
         public double CorrectedTime;
         public int Cones;
