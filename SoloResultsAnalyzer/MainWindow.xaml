@@ -37,6 +37,7 @@
             <Button Content="Ladies Report" Command="{Binding GenerateEventLadiesReport}" Margin="5" />
             <Button Content="Novice Report" Command="{Binding GenerateEventNoviceReport}" Margin="5" />
             <Button Content="Update Classes" Command="{Binding UpdateClasses}" Margin="5" />
+            <Button Content="Load Database" Command="{Binding LoadDatabase}" Margin="5" />
 
         </UniformGrid>
 

@@ -12,42 +12,42 @@ namespace SoloResultsAnalyzer
     class ReportBuilder
     {
         // Column and row definitions for PAX report
-        private static int PaxStartRow = 5;
-        private static int PaxPositionColumn = 1;
-        private static int PaxClassColumn = 2;
-        private static int PaxNumberColumn = 3;
-        private static int PaxDriverColumn = 4;
-        private static int PaxCarColumn = 5;
-        private static int PaxBestRunColumn = 6;
-        private static int PaxTimeColumn = 7;
-        private static int PaxDiffColumn = 8;
-        private static int PaxFromFristColumn = 9;
-        private static int PaxPointsColumn = 10;
+        private const int PaxStartRow = 5;
+        private const int PaxPositionColumn = 1;
+        private const int PaxClassColumn = 2;
+        private const int PaxNumberColumn = 3;
+        private const int PaxDriverColumn = 4;
+        private const int PaxCarColumn = 5;
+        private const int PaxBestRunColumn = 6;
+        private const int PaxTimeColumn = 7;
+        private const int PaxDiffColumn = 8;
+        private const int PaxFromFristColumn = 9;
+        private const int PaxPointsColumn = 10;
 
         // Column and row definitions for raw report
-        private static int RawStartRow = 5;
-        private static int RawPositionColumn = 1;
-        private static int RawClassColumn = 2;
-        private static int RawNumberColumn = 3;
-        private static int RawDriverColumn = 4;
-        private static int RawCarColumn = 5;
-        private static int RawBestRunColumn = 6;
-        private static int RawDiffColumn = 7;
-        private static int RawFromFristColumn = 8;
+        private const int RawStartRow = 5;
+        private const int RawPositionColumn = 1;
+        private const int RawClassColumn = 2;
+        private const int RawNumberColumn = 3;
+        private const int RawDriverColumn = 4;
+        private const int RawCarColumn = 5;
+        private const int RawBestRunColumn = 6;
+        private const int RawDiffColumn = 7;
+        private const int RawFromFristColumn = 8;
 
         // Column and row definitions for class report
-        private static int ClassStartRow = 5;
-        private static int ClassPositionColumn = 1;
-        private static int ClassClassColumn = 2;
-        private static int ClassNumberColumn = 3;
-        private static int ClassDriverColumn = 4;
-        private static int ClassCarColumn = 5;
-        private static int ClassTimesColumn = 6;
-        private static int ClassBestRunColumn = 16;
-        private static int ClassDiffColumn = 17;
-        private static int ClassFromFristColumn = 18;
-        private static int ClassPointsColumn = 19;
-        private static int ClassMaxTimes = 10;
+        private const int ClassStartRow = 5;
+        private const int ClassPositionColumn = 1;
+        private const int ClassClassColumn = 2;
+        private const int ClassNumberColumn = 3;
+        private const int ClassDriverColumn = 4;
+        private const int ClassCarColumn = 5;
+        private const int ClassTimesColumn = 6;
+        private const int ClassBestRunColumn = 16;
+        private const int ClassDiffColumn = 17;
+        private const int ClassFromFristColumn = 18;
+        private const int ClassPointsColumn = 19;
+        private const int ClassMaxTimes = 10;
 
         public static bool GenerateEventPaxReport(int Season, int Event, string File, string Database)
         {
