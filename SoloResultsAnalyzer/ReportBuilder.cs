@@ -11,7 +11,8 @@ namespace SoloResultsAnalyzer
 {
     class ReportBuilder
     {
-        // Column definitions for PAX report
+        // Column and row definitions for PAX report
+        private static int PaxStartRow = 5;
         private static int PaxPositionColumn = 1;
         private static int PaxClassColumn = 2;
         private static int PaxNumberColumn = 3;
@@ -23,7 +24,8 @@ namespace SoloResultsAnalyzer
         private static int PaxFromFristColumn = 9;
         private static int PaxPointsColumn = 10;
 
-        // Column definitions for raw report
+        // Column and row definitions for raw report
+        private static int RawStartRow = 5;
         private static int RawPositionColumn = 1;
         private static int RawClassColumn = 2;
         private static int RawNumberColumn = 3;
@@ -33,7 +35,8 @@ namespace SoloResultsAnalyzer
         private static int RawDiffColumn = 7;
         private static int RawFromFristColumn = 8;
 
-        // Column definitions for class report
+        // Column and row definitions for class report
+        private static int ClassStartRow = 5;
         private static int ClassPositionColumn = 1;
         private static int ClassClassColumn = 2;
         private static int ClassNumberColumn = 3;
@@ -57,6 +60,8 @@ namespace SoloResultsAnalyzer
             {
                 using (SqlConnection db = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30;MultipleActiveResultSets=True", Database)))
                 {
+                    db.Open();
+
                     if (!GetEventResults(Season, Event, -1, false, false, db, ref Results))
                     {
                         Console.WriteLine("Failed to retrieve results.");
@@ -87,16 +92,16 @@ namespace SoloResultsAnalyzer
             // Populate the results
             for (int i = 0; i < SortedResults.Count; ++i)
             {
-                NewEventSheet.Cells[5 + i, PaxPositionColumn].Value = i + 1;
-                NewEventSheet.Cells[5 + i, PaxClassColumn].Value = SortedResults[i].ClassString;
-                NewEventSheet.Cells[5 + i, PaxNumberColumn].Value = SortedResults[i].ClassNumber;
-                NewEventSheet.Cells[5 + i, PaxDriverColumn].Value = string.Format("{0} {1}", SortedResults[i].FirstName, SortedResults[i].LastName);
-                NewEventSheet.Cells[5 + i, PaxCarColumn].Value = SortedResults[i].Car;
-                NewEventSheet.Cells[5 + i, PaxBestRunColumn].Value = SortedResults[i].RawTime;
-                NewEventSheet.Cells[5 + i, PaxTimeColumn].Value = SortedResults[i].PaxTime;
-                NewEventSheet.Cells[5 + i, PaxDiffColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[i - 1].PaxTime);
-                NewEventSheet.Cells[5 + i, PaxFromFristColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[0].PaxTime);
-                NewEventSheet.Cells[5 + i, PaxPointsColumn].Value = Math.Floor(10000 * SortedResults[0].PaxTime / SortedResults[i].PaxTime);  // TODO define points
+                NewEventSheet.Cells[PaxStartRow + i, PaxPositionColumn].Value = i + 1;
+                NewEventSheet.Cells[PaxStartRow + i, PaxClassColumn].Value = SortedResults[i].ClassString;
+                NewEventSheet.Cells[PaxStartRow + i, PaxNumberColumn].Value = SortedResults[i].ClassNumber;
+                NewEventSheet.Cells[PaxStartRow + i, PaxDriverColumn].Value = string.Format("{0} {1}", SortedResults[i].FirstName, SortedResults[i].LastName);
+                NewEventSheet.Cells[PaxStartRow + i, PaxCarColumn].Value = SortedResults[i].Car;
+                NewEventSheet.Cells[PaxStartRow + i, PaxBestRunColumn].Value = SortedResults[i].RawTime;
+                NewEventSheet.Cells[PaxStartRow + i, PaxTimeColumn].Value = SortedResults[i].PaxTime;
+                NewEventSheet.Cells[PaxStartRow + i, PaxDiffColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[i - 1].PaxTime);
+                NewEventSheet.Cells[PaxStartRow + i, PaxFromFristColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[0].PaxTime);
+                NewEventSheet.Cells[PaxStartRow + i, PaxPointsColumn].Value = Math.Floor(10000 * SortedResults[0].PaxTime / SortedResults[i].PaxTime);  // TODO define points
             }
 
             package.Save();
@@ -115,6 +120,8 @@ namespace SoloResultsAnalyzer
             {
                 using (SqlConnection db = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30;MultipleActiveResultSets=True", Database)))
                 {
+                    db.Open();
+
                     if (!GetEventResults(Season, Event, -1, false, false, db, ref Results))
                     {
                         Console.WriteLine("Failed to retrieve results.");
@@ -145,14 +152,14 @@ namespace SoloResultsAnalyzer
             // Populate the results
             for (int i = 0; i < SortedResults.Count; ++i)
             {
-                NewEventSheet.Cells[5 + i, RawPositionColumn].Value = i + 1;
-                NewEventSheet.Cells[5 + i, RawClassColumn].Value = SortedResults[i].ClassString;
-                NewEventSheet.Cells[5 + i, RawNumberColumn].Value = SortedResults[i].ClassNumber;
-                NewEventSheet.Cells[5 + i, RawDriverColumn].Value = string.Format("{0} {1}", SortedResults[i].FirstName, SortedResults[i].LastName);
-                NewEventSheet.Cells[5 + i, RawCarColumn].Value = SortedResults[i].Car;
-                NewEventSheet.Cells[5 + i, RawBestRunColumn].Value = SortedResults[i].RawTime;
-                NewEventSheet.Cells[5 + i, RawDiffColumn].Value = (i == 0 ? 0 : SortedResults[i].RawTime - SortedResults[i - 1].RawTime);
-                NewEventSheet.Cells[5 + i, RawFromFristColumn].Value = (i == 0 ? 0 : SortedResults[i].RawTime - SortedResults[0].RawTime);
+                NewEventSheet.Cells[RawStartRow + i, RawPositionColumn].Value = i + 1;
+                NewEventSheet.Cells[RawStartRow + i, RawClassColumn].Value = SortedResults[i].ClassString;
+                NewEventSheet.Cells[RawStartRow + i, RawNumberColumn].Value = SortedResults[i].ClassNumber;
+                NewEventSheet.Cells[RawStartRow + i, RawDriverColumn].Value = string.Format("{0} {1}", SortedResults[i].FirstName, SortedResults[i].LastName);
+                NewEventSheet.Cells[RawStartRow + i, RawCarColumn].Value = SortedResults[i].Car;
+                NewEventSheet.Cells[RawStartRow + i, RawBestRunColumn].Value = SortedResults[i].RawTime;
+                NewEventSheet.Cells[RawStartRow + i, RawDiffColumn].Value = (i == 0 ? 0 : SortedResults[i].RawTime - SortedResults[i - 1].RawTime);
+                NewEventSheet.Cells[RawStartRow + i, RawFromFristColumn].Value = (i == 0 ? 0 : SortedResults[i].RawTime - SortedResults[0].RawTime);
             }
 
             package.Save();
@@ -197,7 +204,7 @@ namespace SoloResultsAnalyzer
             }
 
             // Count to keep track of spreadsheet rows
-            int RowCounter = 5;
+            int RowCounter = ClassStartRow;
 
             for (int Class = 1; Class < ClassCount; ++Class)
             {
@@ -342,11 +349,121 @@ namespace SoloResultsAnalyzer
 
         public static bool GenerateEventLadiesReport(int Season, int Event, string File, string Database)
         {
+            // Store all results
+            List<Result> Results = new List<Result>();
+
+            // Get data from the database
+            // Update class database
+            try
+            {
+                using (SqlConnection db = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30;MultipleActiveResultSets=True", Database)))
+                {
+                    db.Open();
+
+                    if (!GetEventResults(Season, Event, -1, true, false, db, ref Results))
+                    {
+                        Console.WriteLine("Failed to retrieve results.");
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            List<Result> SortedResults = Results.OrderBy(x => x.PaxTime).ToList();
+
+
+            // Open Excel file and create new sheet for this event
+            FileInfo info = new FileInfo(File);
+
+            ExcelPackage package = new ExcelPackage(info);
+
+            // TODO handle no template
+            // TODO handle existing event
+
+            ExcelWorksheet NewEventSheet = package.Workbook.Worksheets.Copy("Template", string.Format("event{0}", Event));
+
+            NewEventSheet.Cells["A2"].Value = string.Format("{0} Ladies Results - Event #{1} - {2}", Season, Event, 0); // TODO need event date
+
+            // Populate the results
+            for (int i = 0; i < SortedResults.Count; ++i)
+            {
+                NewEventSheet.Cells[PaxStartRow + i, PaxPositionColumn].Value = i + 1;
+                NewEventSheet.Cells[PaxStartRow + i, PaxClassColumn].Value = SortedResults[i].ClassString;
+                NewEventSheet.Cells[PaxStartRow + i, PaxNumberColumn].Value = SortedResults[i].ClassNumber;
+                NewEventSheet.Cells[PaxStartRow + i, PaxDriverColumn].Value = string.Format("{0} {1}", SortedResults[i].FirstName, SortedResults[i].LastName);
+                NewEventSheet.Cells[PaxStartRow + i, PaxCarColumn].Value = SortedResults[i].Car;
+                NewEventSheet.Cells[PaxStartRow + i, PaxBestRunColumn].Value = SortedResults[i].RawTime;
+                NewEventSheet.Cells[PaxStartRow + i, PaxTimeColumn].Value = SortedResults[i].PaxTime;
+                NewEventSheet.Cells[PaxStartRow + i, PaxDiffColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[i - 1].PaxTime);
+                NewEventSheet.Cells[PaxStartRow + i, PaxFromFristColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[0].PaxTime);
+                NewEventSheet.Cells[PaxStartRow + i, PaxPointsColumn].Value = Math.Floor(10000 * SortedResults[0].PaxTime / SortedResults[i].PaxTime);  // TODO define points
+            }
+
+            package.Save();
+
             return true;
         }
 
         public static bool GenerateEventNoviceReport(int Season, int Event, string File, string Database)
         {
+            // Store all results
+            List<Result> Results = new List<Result>();
+
+            // Get data from the database
+            // Update class database
+            try
+            {
+                using (SqlConnection db = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30;MultipleActiveResultSets=True", Database)))
+                {
+                    db.Open();
+
+                    if (!GetEventResults(Season, Event, -1, false, true, db, ref Results))
+                    {
+                        Console.WriteLine("Failed to retrieve results.");
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            List<Result> SortedResults = Results.OrderBy(x => x.PaxTime).ToList();
+
+
+            // Open Excel file and create new sheet for this event
+            FileInfo info = new FileInfo(File);
+
+            ExcelPackage package = new ExcelPackage(info);
+
+            // TODO handle no template
+            // TODO handle existing event
+
+            ExcelWorksheet NewEventSheet = package.Workbook.Worksheets.Copy("Template", string.Format("event{0}", Event));
+
+            NewEventSheet.Cells["A2"].Value = string.Format("{0} Novice Results - Event #{1} - {2}", Season, Event, 0); // TODO need event date
+
+            // Populate the results
+            for (int i = 0; i < SortedResults.Count; ++i)
+            {
+                NewEventSheet.Cells[PaxStartRow + i, PaxPositionColumn].Value = i + 1;
+                NewEventSheet.Cells[PaxStartRow + i, PaxClassColumn].Value = SortedResults[i].ClassString;
+                NewEventSheet.Cells[PaxStartRow + i, PaxNumberColumn].Value = SortedResults[i].ClassNumber;
+                NewEventSheet.Cells[PaxStartRow + i, PaxDriverColumn].Value = string.Format("{0} {1}", SortedResults[i].FirstName, SortedResults[i].LastName);
+                NewEventSheet.Cells[PaxStartRow + i, PaxCarColumn].Value = SortedResults[i].Car;
+                NewEventSheet.Cells[PaxStartRow + i, PaxBestRunColumn].Value = SortedResults[i].RawTime;
+                NewEventSheet.Cells[PaxStartRow + i, PaxTimeColumn].Value = SortedResults[i].PaxTime;
+                NewEventSheet.Cells[PaxStartRow + i, PaxDiffColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[i - 1].PaxTime);
+                NewEventSheet.Cells[PaxStartRow + i, PaxFromFristColumn].Value = (i == 0 ? 0 : SortedResults[i].PaxTime - SortedResults[0].PaxTime);
+                NewEventSheet.Cells[PaxStartRow + i, PaxPointsColumn].Value = Math.Floor(10000 * SortedResults[0].PaxTime / SortedResults[i].PaxTime);  // TODO define points
+            }
+
+            package.Save();
+
             return true;
         }
 

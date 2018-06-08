@@ -205,5 +205,27 @@ namespace SoloResultsAnalyzer
                 });
             }
         }
+
+        public ICommand GenerateEventLadiesReport
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    ReportBuilder.GenerateEventLadiesReport(2018, 2, @"F:\Users\ahall\Projects\2018AutoXTandS\Ladies_Results_2018.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
+
+        public ICommand GenerateEventNoviceReport
+        {
+            get
+            {
+                return new DelegateCommand((object context) =>
+                {
+                    ReportBuilder.GenerateEventNoviceReport(2018, 2, @"F:\Users\ahall\Projects\2018AutoXTandS\Novice_Results_2018.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                });
+            }
+        }
     }
 }
