@@ -29,19 +29,7 @@ namespace SoloResultsAnalyzer
                 MessageBox.Show(message, "Exception");
             };
 
-            base.OnStartup(e);
-
-            // Setup log file
-            AppLog = NLog.LogManager.GetLogger(GetType().Name);
-
-            // Load setup file
-            if (!AppSettings.LoadFromFile(Settings.SettingsPath))
-            {
-                MessageBox.Show("Unabled to load settings file.");
-            }
+            base.OnStartup(e);   
         }
-
-        public Settings AppSettings = new Settings();
-        public NLog.Logger AppLog;
     }
 }

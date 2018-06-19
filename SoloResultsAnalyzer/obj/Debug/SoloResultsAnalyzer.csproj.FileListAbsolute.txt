@@ -50,3 +50,5 @@ F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResu
 F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.csproj.GenerateResource.Cache
 F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.exe
 F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.pdb
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\NLog.dll
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\NLog.xml

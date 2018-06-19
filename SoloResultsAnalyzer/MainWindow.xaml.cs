@@ -17,9 +17,6 @@ using System.IO;
 
 namespace SoloResultsAnalyzer
 {
-
-
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -29,6 +26,18 @@ namespace SoloResultsAnalyzer
         {
             InitializeComponent();
             DataContext = this;
+
+            // Setup log file
+            AppLog = NLog.LogManager.GetLogger(GetType().Name);
+
+            // Load setup file
+            if (!AppSettings.LoadFromFile(Settings.SettingsPath + Settings.SettingsFile))
+            {
+                MessageBox.Show("Unable to load settings file.");
+
+                // Create the settings file for future use
+                AppSettings.CreateDefaultFile();
+            }
         }
 
         /*
@@ -168,63 +177,44 @@ namespace SoloResultsAnalyzer
             {
                 return new DelegateCommand((object context) =>
                 {
-                    RunUpdater.Update(2018, 2, @"A:\Projects\Autocross\2018 Results\Event 2\2018event02-Standard.csv", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    RunUpdater.Update(2018, 3, @"A:\Projects\Autocross\2018 Results\Event 3\2018event03-Standard.csv", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                 });
             }
         }
 
-        public ICommand GenerateEventPaxReport
+        public ICommand GenerateEventReports
         {
             get
             {
                 return new DelegateCommand((object context) =>
                 {
-                    ReportBuilder.GenerateEventPaxReport(2018, 2, @"A:\Projects\Autocross\2018 Results\PAX_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventPaxReport(2018, 3, @"A:\Projects\Autocross\2018 Results\PAX_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventRawReport(2018, 3, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventClassReport(2018, 3, @"A:\Projects\Autocross\2018 Results\Class_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventLadiesReport(2018, 3, @"F:\Users\ahall\Projects\2018AutoXTandS\Ladies_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventNoviceReport(2018, 3, @"F:\Users\ahall\Projects\2018AutoXTandS\Novice_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                 });
             }
         }
 
-        public ICommand GenerateEventRawReport
+        public ICommand UpdateChampionshipReports
         {
             get
             {
                 return new DelegateCommand((object context) =>
                 {
-                    ReportBuilder.GenerateEventRawReport(2018, 2, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventRawReport(2018, 3, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                 });
             }
         }
 
-        public ICommand GenerateEventClassReport
+        public Settings AppSettings = new Settings();
+        public NLog.Logger AppLog;
+        public int CurrentSeason
         {
             get
             {
-                return new DelegateCommand((object context) =>
-                {
-                    ReportBuilder.GenerateEventClassReport(2018, 2, @"A:\Projects\Autocross\2018 Results\Class_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                });
-            }
-        }
-
-        public ICommand GenerateEventLadiesReport
-        {
-            get
-            {
-                return new DelegateCommand((object context) =>
-                {
-                    ReportBuilder.GenerateEventLadiesReport(2018, 2, @"F:\Users\ahall\Projects\2018AutoXTandS\Ladies_Results_2018.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                });
-            }
-        }
-
-        public ICommand GenerateEventNoviceReport
-        {
-            get
-            {
-                return new DelegateCommand((object context) =>
-                {
-                    ReportBuilder.GenerateEventNoviceReport(2018, 2, @"F:\Users\ahall\Projects\2018AutoXTandS\Novice_Results_2018.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                });
+                return AppSettings.CurrentSeason;
             }
         }
     }
