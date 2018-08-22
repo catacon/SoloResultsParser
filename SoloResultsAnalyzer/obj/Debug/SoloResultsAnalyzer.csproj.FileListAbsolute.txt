@@ -52,3 +52,6 @@ F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResu
 F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.pdb
 A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\NLog.dll
 A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\NLog.xml
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\EventImport.g.cs
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer_MarkupCompile.lref
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\EventImport.baml

@@ -177,7 +177,25 @@ namespace SoloResultsAnalyzer
             {
                 return new DelegateCommand((object context) =>
                 {
-                    RunUpdater.Update(2018, 3, @"A:\Projects\Autocross\2018 Results\Event 3\2018event03-Standard.csv", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    //RunUpdater.Update(2018, 7, @"A:\Projects\Autocross\2018 Results\Event 7\2018event7-Standard.csv", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+
+                    // Create file browser
+                    Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+
+                    // Set filter for file extension and default file extension 
+                    ofd.DefaultExt = ".csv";
+                    ofd.Filter = "CSV Files (*.csv)|*.csv";
+
+                    bool? result = ofd.ShowDialog();
+
+                    if (result.HasValue && result.Value == true)
+                    {
+                        // Parse file
+
+                        EventImport ei = new EventImport();
+                        ei.Show();
+                    }
+
                 });
             }
         }
@@ -188,11 +206,11 @@ namespace SoloResultsAnalyzer
             {
                 return new DelegateCommand((object context) =>
                 {
-                    ReportBuilder.GenerateEventPaxReport(2018, 3, @"A:\Projects\Autocross\2018 Results\PAX_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                    ReportBuilder.GenerateEventRawReport(2018, 3, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                    ReportBuilder.GenerateEventClassReport(2018, 3, @"A:\Projects\Autocross\2018 Results\Class_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                    ReportBuilder.GenerateEventLadiesReport(2018, 3, @"F:\Users\ahall\Projects\2018AutoXTandS\Ladies_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                    ReportBuilder.GenerateEventNoviceReport(2018, 3, @"F:\Users\ahall\Projects\2018AutoXTandS\Novice_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    //ReportBuilder.GenerateEventPaxReport(2018, 7, @"A:\Projects\Autocross\2018 Results\PAX_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    //ReportBuilder.GenerateEventRawReport(2018, 7, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventClassReport(2018, 7, @"A:\Projects\Autocross\2018 Results\Class_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    //ReportBuilder.GenerateEventLadiesReport(2018, 7, @"A:\Projects\Autocross\2018 Results\Ladies_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    //ReportBuilder.GenerateEventNoviceReport(2018, 7, @"A:\Projects\Autocross\2018 Results\Novice_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                 });
             }
         }
@@ -203,7 +221,7 @@ namespace SoloResultsAnalyzer
             {
                 return new DelegateCommand((object context) =>
                 {
-                    ReportBuilder.GenerateEventRawReport(2018, 3, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+                    ReportBuilder.GenerateEventRawReport(2018, 6, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                 });
             }
         }

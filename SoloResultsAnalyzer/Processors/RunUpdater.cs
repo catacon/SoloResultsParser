@@ -51,6 +51,34 @@ namespace SoloResultsAnalyzer
 
     class RunUpdater
     {
+        /// <summary>
+        /// Parse data from Pronto CSV file
+        /// </summary>
+        /// <param name="EventFile">Path to event CSV file</param>
+        /// <param name="EventRuns">Output list of runs from the event</param>
+        /// <param name="EventResults">Output list of results from the event</param>
+        /// <returns>True if file was parsed successfully, false otherwise</returns>
+        public bool ParseData(string EventFile, out List<Run> EventRuns, out List<Result> EventResults)
+        {
+            EventRuns = new List<Run>();
+            EventResults = new List<Result>();
+            return true;
+        }
+
+        /// <summary>
+        /// Insert parsed data into season database
+        /// </summary>
+        /// <param name="Season">Season for the data</param>
+        /// <param name="Event">Event for the data</param>
+        /// <param name="Database">Path to database</param>
+        /// <param name="EventRuns">List of event runs</param>
+        /// <param name="EventResults">List of event results</param>
+        /// <returns>True if data was inserted successfully, false otherwise</returns>
+        public bool CommitData(int Season, int Event, string Database, List<Run> EventRuns, List<Result> EventResults)
+        {
+            return true;
+        }
+
         public static bool Update(int Season, int Event, string RunFile, string Database)
         {
             // Validate season input

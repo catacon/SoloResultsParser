@@ -178,7 +178,16 @@ namespace SoloResultsAnalyzer
             // TODO handle no template
             // TODO handle existing event
 
-            ExcelWorksheet NewEventSheet = package.Workbook.Worksheets.Copy("Template", string.Format("event{0}", Event));
+            ExcelWorksheet NewEventSheet;
+
+            try
+            {
+                NewEventSheet = package.Workbook.Worksheets.Copy("Template", string.Format("event{0}", Event));
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return false;
+            }
 
             NewEventSheet.Cells["A2"].Value = string.Format("{0} Class Results - Event #{1} - {2}", Season, Event, 0); // TODO need event date
 
@@ -220,7 +229,7 @@ namespace SoloResultsAnalyzer
                         {
                             db.Open();
 
-                            if (!GetEventRuns(Season, Event, Class, Ladies == 1, false, db, ref Runs))
+                            if (!GetEventRuns(Season, Event, Class, Ladies == 1, null, db, ref Runs))
                             {
                                 Console.WriteLine("Failed to retrieve results.");
                                 return false;
@@ -247,7 +256,7 @@ namespace SoloResultsAnalyzer
                         using (SqlConnection db = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30;MultipleActiveResultSets=True", Database)))
                         {
                             db.Open();
-                            if (!GetEventResults(Season, Event, Class, Ladies == 1, false, db, ref Results))
+                            if (!GetEventResults(Season, Event, Class, Ladies == 1, null, db, ref Results))
                             {
                                 Console.WriteLine("Failed to retrieve results.");
                                 continue;
@@ -334,15 +343,14 @@ namespace SoloResultsAnalyzer
 
                         // TODO Points
                     }
-
-                    package.Save();
-
                     // Add a blank row between columns;
                     ++RowCounter;
                 }
             }
 
+            // TODO handle open workbook
 
+            package.Save();
 
             return true;
         }
@@ -487,7 +495,7 @@ namespace SoloResultsAnalyzer
             return true;
         }
 
-        private static bool GetEventResults(int Season, int Event, int Class, bool Ladies, bool Novice, SqlConnection Conn, ref List<Result> Results)
+        private static bool GetEventResults(int Season, int Event, int Class, bool? Ladies, bool? Novice, SqlConnection Conn, ref List<Result> Results)
         {
             // Validate season input
             if (Season <= 0)
@@ -508,11 +516,21 @@ namespace SoloResultsAnalyzer
 
             if (Class > 0)
             {
-                ResultQuery = string.Format("SELECT * FROM Results WHERE Season = '{0}' AND Event = '{1}' AND Class = '{2}' AND Ladies = '{3}' AND Novice = '{4}'", Season, Event, Class, (Ladies ? 1 : 0), (Novice ? 1 : 0));
+                ResultQuery = string.Format("SELECT * FROM Results WHERE Season = '{0}' AND Event = '{1}' AND Class = '{2}'", Season, Event, Class);
             }
             else
             {
-                ResultQuery = string.Format("SELECT * FROM Results WHERE Season = '{0}' AND Event = '{1}' AND Ladies = '{2}' AND Novice = '{3}'", Season, Event, (Ladies ? 1 : 0), (Novice ? 1 : 0));
+                ResultQuery = string.Format("SELECT * FROM Results WHERE Season = '{0}' AND Event = '{1}'", Season, Event);
+            }
+
+            if (Ladies.HasValue)
+            {
+                ResultQuery = string.Format("{0} AND Ladies='{1}'", ResultQuery, (Ladies.Value ? 1 : 0));
+            }
+
+            if (Novice.HasValue)
+            {
+                ResultQuery = string.Format("{0} AND Novice='{1}'", ResultQuery, (Novice.Value ? 1 : 0));
             }
 
             using (SqlCommand command = new SqlCommand(ResultQuery, Conn))
@@ -542,7 +560,7 @@ namespace SoloResultsAnalyzer
             return true;
         }
 
-        private static bool GetEventRuns(int Season, int Event, int Class, bool Ladies, bool Novice, SqlConnection Conn, ref List<Run> Runs)
+        private static bool GetEventRuns(int Season, int Event, int Class, bool? Ladies, bool? Novice, SqlConnection Conn, ref List<Run> Runs)
         {
             // Validate season input
             if (Season <= 0)
@@ -566,7 +584,17 @@ namespace SoloResultsAnalyzer
             }
 
             // Build the run query
-            String RunQuery = string.Format("SELECT * FROM Runs WHERE Season = '{0}' AND Event = '{1}' AND Class = '{2}' AND Ladies = '{3}' AND Novice = '{4}'", Season, Event, Class, (Ladies ? 1: 0), (Novice ? 1 : 0));
+            String RunQuery = string.Format("SELECT * FROM Runs WHERE Season = '{0}' AND Event = '{1}' AND Class = '{2}'", Season, Event, Class);
+
+            if (Ladies.HasValue)
+            {
+                RunQuery = string.Format("{0} AND Ladies='{1}'", RunQuery, (Ladies.Value ? 1 : 0));
+            }
+
+            if (Novice.HasValue)
+            {
+                RunQuery = string.Format("{0} AND Novice='{1}'", RunQuery, (Novice.Value ? 1 : 0));
+            }
 
             using (SqlCommand command = new SqlCommand(RunQuery, Conn))
             {

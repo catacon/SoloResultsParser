@@ -82,9 +82,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EventImport.xaml.cs">
+      <DependentUpon>EventImport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Processors\ReportBuilder.cs" />
     <Compile Include="Processors\RunUpdater.cs" />
     <Compile Include="Utilities\Settings.cs" />
+    <Page Include="EventImport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
