@@ -82,9 +82,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataClasses\Result.cs" />
+    <Compile Include="DataClasses\Run.cs" />
     <Compile Include="EventImport.xaml.cs">
       <DependentUpon>EventImport.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Processors\ProntoFileParser.cs" />
+    <Compile Include="Processors\IFileParser.cs" />
     <Compile Include="Processors\ReportBuilder.cs" />
     <Compile Include="Processors\RunUpdater.cs" />
     <Compile Include="Utilities\Settings.cs" />

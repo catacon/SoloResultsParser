@@ -4,276 +4,244 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SoloResultsAnalyzer.Processors;
+using SoloResultsAnalyzer.DataClasses;
 
 namespace SoloResultsAnalyzer
 {
-    public enum RunPenalty
-    {
-        None,
-        DNF,
-        RRN
-    }
-
-    public class Run
-    {
-        public int RunNumber;
-        public string FirstName;
-        public string LastName;
-        public string Car;
-        public string ClassString;
-        public int ClassId;
-        public int ClassNumber;
-        public double RawTime;
-        public double CorrectedTime;
-        public int Cones;
-        public RunPenalty Penalty;
-    }
-
-    public class Result
-    {
-        public string FirstName;
-        public string LastName;
-        public string Car;
-        public string ClassString;
-        public int ClassId;
-        public int ClassNumber;
-        public List<Run> Runs;
-        public double RawTime;
-        public double PaxTime;
-
-        public Result()
-        {
-            Runs = new List<Run>();
-        }
-    }
-
     class RunUpdater
     {
-        /// <summary>
-        /// Parse data from Pronto CSV file
-        /// </summary>
-        /// <param name="EventFile">Path to event CSV file</param>
-        /// <param name="EventRuns">Output list of runs from the event</param>
-        /// <param name="EventResults">Output list of results from the event</param>
-        /// <returns>True if file was parsed successfully, false otherwise</returns>
-        public bool ParseData(string EventFile, out List<Run> EventRuns, out List<Result> EventResults)
+        IFileParser _fileParser;
+        SqlConnection _dbConnection;
+
+        public List<Run> _eventRuns = new List<Run>();
+        public List<Result> _eventResults = new List<Result>();
+
+        readonly int _defaultClassId = 1;
+
+        public RunUpdater(IFileParser fileParser, string dbPath)
         {
-            EventRuns = new List<Run>();
-            EventResults = new List<Result>();
+            _fileParser = fileParser;
+            _dbConnection = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", dbPath));
+        }
+
+        /// <summary>
+        /// Import event data into database
+        /// </summary>
+        /// <param name="Season">Season year for data</param>
+        /// <param name="Event">Event number for data</param>
+        /// <param name="Database">Path to database in which to store data</param>
+        /// <param name="EventFile">Path to event CSV file</param>
+        /// <returns>True if file was parsed successfully, false otherwise</returns>
+        public bool ParseEventData(int Season, int Event, string Database, string EventFile)
+        {
+            // Attempt to open class list file
+            if (!File.Exists(EventFile))
+            {
+                Console.WriteLine(string.Format("Event File {0} does not exist!", EventFile));
+                return false;
+            }
+
+            // Parse event file into runs and results lists
+            if (!_fileParser.ParseEventFile(EventFile, ref _eventRuns, ref _eventResults))
+            {
+                Console.WriteLine("Failed to parse event file {0}", EventFile);
+                return false;
+            }
+
+            // Verify there is data in the runs and results list
+            if (_eventRuns.Count <= 0 || _eventResults.Count <= 0)
+            {
+                Console.WriteLine("No data in runs or results list: {0}, {1}", _eventRuns.Count, _eventResults.Count);
+                return false;
+            }
+
+            // Update result and run class IDs
+            if (!UpdateClassIDs())
+            {
+                Console.WriteLine("Failed to update class IDs.");
+                return false;
+            }
+
+            // Update PAX results
+            if (!UpdatePAXResults())
+            {
+                Console.WriteLine("Failed to update PAX results");
+                return false;
+            }
+
             return true;
         }
 
         /// <summary>
-        /// Insert parsed data into season database
+        /// Insert event data into season database
         /// </summary>
         /// <param name="Season">Season for the data</param>
         /// <param name="Event">Event for the data</param>
         /// <param name="Database">Path to database</param>
-        /// <param name="EventRuns">List of event runs</param>
-        /// <param name="EventResults">List of event results</param>
         /// <returns>True if data was inserted successfully, false otherwise</returns>
-        public bool CommitData(int Season, int Event, string Database, List<Run> EventRuns, List<Result> EventResults)
+        public bool InsertData(int Season, int Event, string Database)
         {
+            // Create run insert query
+            String RunInsertQuery = "INSERT INTO Runs (Season,Event,RunNumber,FirstName,LastName,Car,Class,Number,RawTime,Cones,Penalty,Ladies,Novice) VALUES (@Season,@Event,@RunNumber,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@Cones,@Penalty,@Ladies,@Novice)";
+
+            // Create result insert query
+            String ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,Ladies,Novice) VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@Ladies,@Novice)";
+
+            // Open database
+            _dbConnection.Open();
+
+            foreach (Result currentResult in _eventResults)
+            {               
+                // Insert result into database                  
+                using (SqlCommand command = new SqlCommand(ResultInsertQuery, _dbConnection))
+                {
+                    command.Parameters.AddWithValue("@Season", Season);
+                    command.Parameters.AddWithValue("@Event", Event);
+                    command.Parameters.AddWithValue("@FirstName", currentResult.FirstName);
+                    command.Parameters.AddWithValue("@LastName", currentResult.LastName);
+                    command.Parameters.AddWithValue("@Car", currentResult.Car);
+                    command.Parameters.AddWithValue("@Class", currentResult.ClassId);
+                    command.Parameters.AddWithValue("@Number", currentResult.ClassNumber);
+                    command.Parameters.AddWithValue("@RawTime", currentResult.RawTime);
+                    command.Parameters.AddWithValue("@PaxTime", currentResult.PaxTime);
+                    command.Parameters.AddWithValue("@Ladies", currentResult.Ladies ? 1 : 0);
+                    command.Parameters.AddWithValue("@Novice", currentResult.Novice ? 1 : 0);
+
+                    // Execute insert command
+                    int result = command.ExecuteNonQuery();
+
+                    // Check Error
+                    if (result < 0)
+                    {
+                        Console.WriteLine("Error inserting result data into Database!");
+                        // TODO handle error
+                    }
+                }
+
+                for (int iRun = 0; iRun < currentResult.Runs.Count; ++iRun)
+                {
+                    // Insert run into database
+                    using (SqlCommand command = new SqlCommand(RunInsertQuery, _dbConnection))
+                    {
+                        command.Parameters.AddWithValue("@Season", Season);
+                        command.Parameters.AddWithValue("@Event", Event);
+                        command.Parameters.AddWithValue("@RunNumber", iRun + 1);
+                        command.Parameters.AddWithValue("@FirstName", currentResult.FirstName);
+                        command.Parameters.AddWithValue("@LastName", currentResult.LastName);
+                        command.Parameters.AddWithValue("@Car", currentResult.Car);
+                        command.Parameters.AddWithValue("@Class", currentResult.ClassId);
+                        command.Parameters.AddWithValue("@Number", currentResult.ClassNumber);
+                        command.Parameters.AddWithValue("@RawTime", currentResult.Runs[iRun].RawTime);
+                        command.Parameters.AddWithValue("@Cones", currentResult.Runs[iRun].Cones);
+                        command.Parameters.AddWithValue("@Penalty", (int)currentResult.Runs[iRun].Penalty);
+                        command.Parameters.AddWithValue("@Ladies", currentResult.Ladies ? 1 : 0);
+                        command.Parameters.AddWithValue("@Novice", currentResult.Novice ? 1 : 0);
+
+                        // Execute insert command
+                        int result = command.ExecuteNonQuery();
+
+                        // Check Error
+                        if (result < 0)
+                        {
+                            Console.WriteLine("Error inserting run data into Database!");
+                            // TODO handle error
+                        }
+                    }
+                }
+            }
+
+            _dbConnection.Close();
+
             return true;
         }
 
-        public static bool Update(int Season, int Event, string RunFile, string Database)
+        /// <summary>
+        /// Update result class IDs based on class string paresed from event data file
+        /// </summary>
+        /// <returns>True if all class IDs where updated successfully, false otherwise</returns>
+        public bool UpdateClassIDs()
         {
-            // Validate season input
-            if (Season <= 0)
-            {
-                Console.WriteLine(string.Format("Invalid season: {0}", Season));
-                return false;
-            }
-
-            // Validate event input
-            if (Event <= 0)
-            {
-                Console.WriteLine(string.Format("Invalid event: {0}", Event));
-                return false;
-            }
-
-            // Attempt to open class list file
-            if (!File.Exists(RunFile))
-            {
-                Console.WriteLine(string.Format("Class List File {0} does not exist!", RunFile));
-                return false;
-            }
-
-            // Update class database
             try
             {
-                using (SqlConnection db = new SqlConnection(string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", Database)))
+                // Open the database
+                _dbConnection.Open();
+
+                foreach (Result currentResult in _eventResults)
                 {
-                    // Open class list file
-                    TextFieldParser Parser = new TextFieldParser(RunFile);
-                    Parser.SetDelimiters(",");
+                    // Get the class ID - strip off 'L' from ladies classes
+                    String ClassIdQuery = string.Format("SELECT Id FROM Classes WHERE Abbreviation = '{0}'", currentResult.ClassString.Substring(currentResult.ClassString.Length - 1) == "L" ? currentResult.ClassString.Substring(0, currentResult.ClassString.Length - 1) : currentResult.ClassString);
 
-                    // Skip the first line
-                    Parser.ReadLine();
-
-                    // Open database
-                    db.Open();
-
-                    // Read every line of results file and insert data into database
-                    while (!Parser.EndOfData)
+                    // Store class ID in results, if no result is found, store the default class
+                    using (SqlCommand command = new SqlCommand(ClassIdQuery, _dbConnection))
                     {
-                        // 0         1      2        3     4     5            6          7         8           9       10       11     12    13, ...
-                        // PAX pos, class, number, fname, lname, car year, car make, car model, car color, best run, pax time, time, cones, penalty, ...
-                        string[] Fields = Parser.ReadFields();
-
-                        // Skip entries with no valid runs
-                        if (Fields[9] == "DNF")
+                        try
                         {
-                            Console.WriteLine("No valid runs...skipping.");
-                            continue;
+                            currentResult.ClassId = (int)command.ExecuteScalar();
                         }
-
-                        Result NewResult = new Result();
-
-                        NewResult.ClassString = Fields[1];
-                        NewResult.ClassNumber = int.Parse(Fields[2]);
-                        NewResult.FirstName = Fields[3];
-                        NewResult.LastName = Fields[4];
-                        NewResult.Car = string.Format("{0} {1} {2} {3}", Fields[5], Fields[6], Fields[7].Substring(Fields[7].Length - 1) == "/" ? Fields[7].Substring(0, Fields[7].Length - 1) : Fields[7] + " |", Fields[8]);  // Strip slash if car color was not specified
-
-                        // Get the class ID - strip off 'L' from ladies classes
-                        String ClassIdQuery = string.Format("SELECT Id FROM Classes WHERE Abbreviation = '{0}'", NewResult.ClassString.Substring(NewResult.ClassString.Length - 1) == "L" ? NewResult.ClassString.Substring(0, NewResult.ClassString.Length - 1) : NewResult.ClassString);
-
-                        using (SqlCommand command = new SqlCommand(ClassIdQuery, db))
+                        catch (Exception ex)
                         {
-                            try
-                            {
-                                NewResult.ClassId = (int)command.ExecuteScalar();
-                            }
-                            catch (Exception ex)
-                            {
-                                // TODO bail out
-                                Console.WriteLine("Unable to get class ID");
-                                Console.WriteLine(ex.Message);
-                                NewResult.ClassId = 1;
-                            }
-                        }
-
-                        // Build single run insert query here and update it for each run below
-                        String RunInsertQuery = "INSERT INTO Runs (Season,Event,RunNumber,FirstName,LastName,Car,Class,Number,RawTime,Cones,Penalty,Ladies,Novice) VALUES (@Season,@Event,@RunNumber,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@Cones,@Penalty,@Ladies,@Novice)";
-
-                        // Extract all run data
-                        for (int field = 11; field < Fields.Length - 2; field += 3)
-                        {
-                            Run run = new Run();
-
-                            run.RawTime = double.Parse(Fields[field]);
-                            run.Cones = int.Parse(Fields[field + 1]);
-
-                            string penalty = Fields[field + 2];
-
-                            if (penalty == "DNF")
-                            {
-                                run.Penalty = RunPenalty.DNF;
-                                run.CorrectedTime = 999.999;
-                            }
-                            else if (penalty == "RL")
-                            {
-                                run.Penalty = RunPenalty.RRN;
-                                run.CorrectedTime = 999.999;
-                            }
-                            else
-                            {
-                                run.Penalty = RunPenalty.None;
-                                run.CorrectedTime = run.RawTime + (2 * run.Cones);
-                            }
-
-                            NewResult.Runs.Add(run);
-
-                            // Insert run into database
-                            using (SqlCommand command = new SqlCommand(RunInsertQuery, db))
-                            {
-                                command.Parameters.AddWithValue("@Season", Season);
-                                command.Parameters.AddWithValue("@Event", Event);
-                                command.Parameters.AddWithValue("@RunNumber", NewResult.Runs.Count);
-                                command.Parameters.AddWithValue("@FirstName", NewResult.FirstName);
-                                command.Parameters.AddWithValue("@LastName", NewResult.LastName);
-                                command.Parameters.AddWithValue("@Car", NewResult.Car);
-                                command.Parameters.AddWithValue("@Class", NewResult.ClassId);
-                                command.Parameters.AddWithValue("@Number", NewResult.ClassNumber);
-                                command.Parameters.AddWithValue("@RawTime", run.RawTime);
-                                command.Parameters.AddWithValue("@Cones", run.Cones);
-                                command.Parameters.AddWithValue("@Penalty", (int)run.Penalty);
-                                command.Parameters.AddWithValue("@Ladies", 0);
-                                command.Parameters.AddWithValue("@Novice", 0);
-
-                                // Execute insert command
-                                int result = command.ExecuteNonQuery();
-
-                                // Check Error
-                                if (result < 0)
-                                {
-                                    Console.WriteLine("Error inserting data into Database!");
-                                    // TODO handle error
-                                }
-                            }
-                        }
-
-                        // Sort runs to find best time
-                        NewResult.Runs = NewResult.Runs.OrderBy(x => x.CorrectedTime).ToList();
-                        NewResult.RawTime = NewResult.Runs.First().CorrectedTime;
-
-                        // Get the PAX multiplier and apply it
-                        String PaxQuery = string.Format("SELECT Multiplier FROM Classes WHERE Id = '{0}'", NewResult.ClassId);
-
-                        using (SqlCommand command = new SqlCommand(PaxQuery, db))
-                        {
-                            try
-                            {
-                                Decimal Multiplier = (Decimal)command.ExecuteScalar();
-                                NewResult.PaxTime = (NewResult.RawTime * (double)Multiplier);
-                            }
-                            catch (Exception ex)
-                            {
-                                // TODO bail out
-                                Console.WriteLine("Unable to get class ID");
-                                Console.WriteLine(ex.Message);
-                            }
-                        }
-
-                        // Insert result into database
-                        String ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,Ladies,Novice) VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@Ladies,@Novice)";
-
-                        using (SqlCommand command = new SqlCommand(ResultInsertQuery, db))
-                        {
-                            command.Parameters.AddWithValue("@Season", Season);
-                            command.Parameters.AddWithValue("@Event", Event);
-                            command.Parameters.AddWithValue("@FirstName", NewResult.FirstName);
-                            command.Parameters.AddWithValue("@LastName", NewResult.LastName);
-                            command.Parameters.AddWithValue("@Car", NewResult.Car);
-                            command.Parameters.AddWithValue("@Class", NewResult.ClassId);
-                            command.Parameters.AddWithValue("@Number", NewResult.ClassNumber);
-                            command.Parameters.AddWithValue("@RawTime", NewResult.RawTime);
-                            command.Parameters.AddWithValue("@PaxTime", NewResult.PaxTime);
-                            command.Parameters.AddWithValue("@Ladies", 0);
-                            command.Parameters.AddWithValue("@Novice", 0);
-
-                            // Execute insert command
-                            int result = command.ExecuteNonQuery();
-
-                            // Check Error
-                            if (result < 0)
-                            {
-                                Console.WriteLine("Error inserting data into Database!");
-                                // TODO handle error
-                            }
+                            Console.WriteLine("Unable to get class ID");
+                            Console.WriteLine("Exception caught while getting class ID: {0}", ex.Message);
+                            currentResult.ClassId = _defaultClassId;
+                            return false;
                         }
                     }
 
+                }
+
+                // Close the connection
+                _dbConnection.Close();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("UpdateClassIDs() Exception: {0}", ex.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Update the PAX times within each Result
+        /// </summary>
+        /// <returns>True if results were updated successfully, false otherwise</returns>
+        public bool UpdatePAXResults()
+        {
+            try
+            {
+                // Open the database
+                _dbConnection.Open();
+
+                foreach (Result currentResult in _eventResults)
+                {
+                    // Get the PAX multiplier and apply it
+                    String PaxQuery = string.Format("SELECT Multiplier FROM Classes WHERE Id = '{0}'", currentResult.ClassId);
+
+                    using (SqlCommand command = new SqlCommand(PaxQuery, _dbConnection))
+                    {
+                        try
+                        {
+                            Decimal Multiplier = (Decimal)command.ExecuteScalar();
+                            currentResult.PaxTime = (currentResult.RawTime * (double)Multiplier);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Exception caught while updating PAX: {0}", ex.ToString());
+                            Console.WriteLine(ex.Message);
+                            return false;
+                        }
+                    }
 
                 }
+
+                // Close the connection
+                _dbConnection.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("UpdatePAXResults() Exception: {0}", ex.ToString());
+                return false;
             }
 
             return true;
