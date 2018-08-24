@@ -41,8 +41,8 @@ namespace SoloResultsAnalyzer
                 throw new ArgumentNullException("execute");
             }
 
-            this.executionAction = execute;
-            this.canExecutePredicate = canExecute;
+            executionAction = execute;
+            canExecutePredicate = canExecute;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SoloResultsAnalyzer
         /// <returns>True if command is valid for execution</returns>
         public bool CanExecute(object parameter)
         {
-            return this.canExecutePredicate == null ? true : this.canExecutePredicate(parameter);
+            return canExecutePredicate == null ? true : canExecutePredicate(parameter);
         }
 
         /// <summary>
@@ -71,11 +71,11 @@ namespace SoloResultsAnalyzer
         /// <exception cref="InvalidOperationException">Thrown if CanExecute returns false</exception>
         public void Execute(object parameter)
         {
-            if (!this.CanExecute(parameter))
+            if (!CanExecute(parameter))
             {
                 throw new InvalidOperationException("The command is not valid for execution, check the CanExecute method before attempting to execute.");
             }
-            this.executionAction(parameter);
+            executionAction(parameter);
         }
     }
 }

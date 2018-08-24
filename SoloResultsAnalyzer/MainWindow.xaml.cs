@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using SoloResultsAnalyzer.ViewModels;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SoloResultsAnalyzer
@@ -6,12 +8,20 @@ namespace SoloResultsAnalyzer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+        private ViewModelBase _viewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _viewModel = new HomeViewModel();
+
             DataContext = this;
+
+            _viewModel.PropertyChanged += _viewModel_PropertyChanged;
 
             // Setup log file
             AppLog = NLog.LogManager.GetLogger(GetType().Name);
@@ -24,6 +34,65 @@ namespace SoloResultsAnalyzer
                 // Create the settings file for future use
                 AppSettings.CreateDefaultFile();
             }
+        }
+
+        private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "nextViewModel")
+            {
+                if (_viewModel._nextViewModel == "Home")
+                {
+                    _viewModel = new HomeViewModel();
+                }
+
+                if (_viewModel._nextViewModel == "EventImportViewModel")
+                {
+                    _viewModel = new EventImportViewModel();
+                }
+
+                _viewModel.PropertyChanged += _viewModel_PropertyChanged;
+
+                OnPropertyChanged("CurrentViewModel");
+            }
+        }
+
+        public ViewModelBase CurrentViewModel
+        {
+            get
+            {
+                return _viewModel;
+            }
+        }
+
+        public ICommand Import
+        {
+            get
+            {
+                return new DelegateCommand(o =>
+                {
+                    _viewModel = new EventImportViewModel();
+                    OnPropertyChanged("CurrentViewModel");
+                });
+            }
+        }
+
+        public ICommand Home
+        {
+            get
+            {
+                return new DelegateCommand(o =>
+                {
+                    _viewModel = new HomeViewModel();
+                    OnPropertyChanged("CurrentViewModel");
+                });
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /*
@@ -178,8 +247,8 @@ namespace SoloResultsAnalyzer
                     {
                         // Parse file
 
-                        EventImport ei = new EventImport();
-                        ei.Show();
+                        //ei = new EventImport();
+                        //ei.Show();
                     }
 
                 });

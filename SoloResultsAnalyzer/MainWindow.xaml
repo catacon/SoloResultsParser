@@ -1,8 +1,24 @@
 ﻿<Window x:Class="SoloResultsAnalyzer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:VM="clr-namespace:SoloResultsAnalyzer.ViewModels"
+        xmlns:View="clr-namespace:SoloResultsAnalyzer.Views"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
+        <ContentPresenter Content="{Binding CurrentViewModel}">
+            <ContentPresenter.Resources>
+                <DataTemplate  DataType="{x:Type VM:EventImportViewModel}">
+                    <View:EventImport/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type VM:HomeViewModel}">
+                    <View:Home />
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+
+
+    </Grid>
+    <!--
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
@@ -36,6 +52,5 @@
             <Button Content="New Season" Command="{Binding NewSeason}" Margin="5" />
 
         </UniformGrid>
-
-    </Grid>
+        -->
 </Window>
