@@ -4,16 +4,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SoloResultsAnalyzer.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        // PropertyChanged event for INotifyPeopertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string _nextViewModel;
 
-        protected string _pageTitle;
+        private string _pageTitle;
 
         public string PageTitle
         {
@@ -23,6 +25,24 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
+        public ViewModelBase(string pageTitle)
+        {
+            _pageTitle = pageTitle;
+        }
+
+        // Command for navigating to the home view model
+        public ICommand Home
+        {
+            get
+            {
+                return SetNextViewModel("Home");
+            }
+        }
+
+        /// <summary>
+        /// OnPropertyChanged for implementation of INotifyPropertyChanged
+        /// </summary>
+        /// <param name="propertyName">Name of property that has changed</param>
         public void OnPropertyChanged(string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -41,5 +61,7 @@ namespace SoloResultsAnalyzer.ViewModels
                 OnPropertyChanged("nextViewModel");
             });
         }
+
+
     }
 }

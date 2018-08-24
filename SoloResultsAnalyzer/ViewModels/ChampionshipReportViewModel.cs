@@ -8,5 +8,9 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     class ChampionshipReportViewModel : ViewModelBase
     {
+        public ChampionshipReportViewModel(string pageTitle) : base(pageTitle)
+        {
+            
+        }
     }
 }

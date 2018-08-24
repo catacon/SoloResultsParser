@@ -8,5 +8,9 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     class NewSeasonViewModel : ViewModelBase
     {
+        public NewSeasonViewModel(string pageTitle) : base(pageTitle)
+        {
+
+        }
     }
 }

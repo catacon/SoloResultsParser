@@ -8,5 +8,9 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     class EventReportViewModel : ViewModelBase
     {
+        public EventReportViewModel(string pageTitle) : base(pageTitle)
+        {
+
+        }
     }
 }

@@ -31,11 +31,11 @@ namespace SoloResultsAnalyzer
             InitializeComponent();
 
             // Initialize view models
-            _homeViewModel = new HomeViewModel();
-            _eventImportViewModel = new EventImportViewModel();
-            _eventReportViewModel = new EventReportViewModel();
-            _championshipReportViewModel = new ChampionshipReportViewModel();
-            _newSeasonViewModel = new NewSeasonViewModel();
+            _homeViewModel = new HomeViewModel("Home");
+            _eventImportViewModel = new EventImportViewModel("Import Event Data");
+            _eventReportViewModel = new EventReportViewModel("Create Event Reports");
+            _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
+            _newSeasonViewModel = new NewSeasonViewModel("Start New Season");
 
             // Set initial view model
             _currentViewModel = _homeViewModel;
@@ -100,9 +100,7 @@ namespace SoloResultsAnalyzer
             }
         }
 
-        /// <summary>
-        /// Getter for the current view model
-        /// </summary>
+        // Current view model - made accessible to UI
         public ViewModelBase CurrentViewModel
         {
             get
