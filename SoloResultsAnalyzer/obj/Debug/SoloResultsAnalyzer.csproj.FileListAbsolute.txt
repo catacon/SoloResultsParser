@@ -83,3 +83,17 @@ C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResu
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.csproj.CopyComplete
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer.csprojAssemblyReference.cache
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\NLog.dll
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\NLog.xml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\GeneratedInternalTypeHelper.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\SoloResultsAnalyzer_MarkupCompile.lref
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\ChampionshipReportView.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\EventImportView.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\EventReportView.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\HomeView.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\NewSeasonView.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\ChampionshipReportView.baml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\EventImportView.baml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\EventReportView.baml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\HomeView.baml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\NewSeasonView.baml

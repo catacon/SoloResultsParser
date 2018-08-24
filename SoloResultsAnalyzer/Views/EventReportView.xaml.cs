@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace SoloResultsAnalyzer.Views
 {
     /// <summary>
-    /// Interaction logic for Home.xaml
+    /// Interaction logic for EventReportView.xaml
     /// </summary>
-    public partial class Home : UserControl
+    public partial class EventReportView : UserControl
     {
-        public Home()
+        public EventReportView()
         {
             InitializeComponent();
         }

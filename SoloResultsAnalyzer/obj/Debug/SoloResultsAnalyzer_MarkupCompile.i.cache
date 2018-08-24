@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\
 SoloResultsAnalyzer
 none
 false
 DEBUG;TRACE
-C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\App.xaml
-3-748176501
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\App.xaml
+61174309286
 2-1268814395
-23-1996385856
-23-994157103
-MainWindow.xaml;Views\EventImport.xaml;Views\Home.xaml;
+291401504190
+23-702977151
+MainWindow.xaml;Views\ChampionshipReportView.xaml;Views\EventImportView.xaml;Views\EventReportView.xaml;Views\HomeView.xaml;Views\NewSeasonView.xaml;
 
-False
+True
 

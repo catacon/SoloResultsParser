@@ -9,6 +9,11 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class EventImportViewModel : ViewModelBase
     {
+        public EventImportViewModel()
+        {
+            _pageTitle = "Import Event Results";
+        }
+
         public ICommand Home
         {
             get

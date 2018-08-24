@@ -3,15 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:VM="clr-namespace:SoloResultsAnalyzer.ViewModels"
         xmlns:View="clr-namespace:SoloResultsAnalyzer.Views"
-        Title="MainWindow" Height="350" Width="525">
+        Title="{Binding CurrentViewModel.PageTitle}" Height="350" Width="525">
     <Grid>
         <ContentPresenter Content="{Binding CurrentViewModel}">
             <ContentPresenter.Resources>
                 <DataTemplate  DataType="{x:Type VM:EventImportViewModel}">
-                    <View:EventImport/>
+                    <View:EventImportView />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type VM:HomeViewModel}">
-                    <View:Home />
+                    <View:HomeView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type VM:EventReportViewModel}">
+                    <View:EventReportView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type VM:ChampionshipReportViewModel}">
+                    <View:ChampionshipReportView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type VM:NewSeasonViewModel}">
+                    <View:NewSeasonView />
                 </DataTemplate>
             </ContentPresenter.Resources>
         </ContentPresenter>

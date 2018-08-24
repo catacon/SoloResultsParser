@@ -9,6 +9,11 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
+        public HomeViewModel()
+        {
+            _pageTitle = "Home";
+        }
+
         public ICommand Import
         {
             get

@@ -20,6 +20,12 @@ namespace SoloResultsAnalyzer
         private ViewModelBase _championshipReportViewModel;
         private ViewModelBase _newSeasonViewModel;
 
+        // Settings object for managing program state
+        public Settings _appSettings = new Settings();
+
+        // Logging object
+        public NLog.Logger _appLog;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +33,9 @@ namespace SoloResultsAnalyzer
             // Initialize view models
             _homeViewModel = new HomeViewModel();
             _eventImportViewModel = new EventImportViewModel();
-            // TODO add other view models
+            _eventReportViewModel = new EventReportViewModel();
+            _championshipReportViewModel = new ChampionshipReportViewModel();
+            _newSeasonViewModel = new NewSeasonViewModel();
 
             // Set initial view model
             _currentViewModel = _homeViewModel;
@@ -43,15 +51,15 @@ namespace SoloResultsAnalyzer
             DataContext = this;
 
             // Setup log file
-            AppLog = NLog.LogManager.GetLogger(GetType().Name);
+            _appLog = NLog.LogManager.GetLogger(GetType().Name);
 
             // Load setup file
-            if (!AppSettings.LoadFromFile(Settings.SettingsPath + Settings.SettingsFile))
+            if (!_appSettings.LoadFromFile(Settings.SettingsPath + Settings.SettingsFile))
             {
                 MessageBox.Show("Unable to load settings file.");
 
                 // Create the settings file for future use
-                AppSettings.CreateDefaultFile();
+                _appSettings.CreateDefaultFile();
             }
         }
 
@@ -73,7 +81,15 @@ namespace SoloResultsAnalyzer
                     case "EventImportViewModel":
                         _currentViewModel = _eventImportViewModel;
                         break;
-                    // TODO add other view models
+                    case "EventReportViewModel":
+                        _currentViewModel = _eventReportViewModel;
+                        break;
+                    case "ChampionshipReportViewModel":
+                        _currentViewModel = _championshipReportViewModel;
+                        break;
+                    case "NewSeasonViewModel":
+                        _currentViewModel = _newSeasonViewModel;
+                        break;
                     default:
                         // Do nothing
                         break;
@@ -95,8 +111,13 @@ namespace SoloResultsAnalyzer
             }
         }
 
+        // PropertyChanged event for INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// OnPropertyChanged for implementation of INotifyPropertyChanged
+        /// </summary>
+        /// <param name="propertyName">Name of property that has changed</param>
         public void OnPropertyChanged(string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -274,27 +295,6 @@ namespace SoloResultsAnalyzer
                     //ReportBuilder.GenerateEventLadiesReport(2018, 7, @"A:\Projects\Autocross\2018 Results\Ladies_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                     //ReportBuilder.GenerateEventNoviceReport(2018, 7, @"A:\Projects\Autocross\2018 Results\Novice_Results_2018_test.xlsx", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
                 });
-            }
-        }
-
-        public ICommand UpdateChampionshipReports
-        {
-            get
-            {
-                return new DelegateCommand((object context) =>
-                {
-                    ReportBuilder.GenerateEventRawReport(2018, 6, @"A:\Projects\Autocross\2018 Results\Raw_Results_2018_test.xlsx", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-                });
-            }
-        }
-
-        public Settings AppSettings = new Settings();
-        public NLog.Logger AppLog;
-        public int CurrentSeason
-        {
-            get
-            {
-                return AppSettings.CurrentSeason;
             }
         }
     }
