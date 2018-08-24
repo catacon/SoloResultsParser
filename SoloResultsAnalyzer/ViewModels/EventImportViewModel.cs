@@ -13,11 +13,7 @@ namespace SoloResultsAnalyzer.ViewModels
         {
             get
             {
-                return new DelegateCommand(o =>
-                {
-                    _nextViewModel = "Home";
-                    OnPropertyChanged("nextViewModel");
-                });
+                return SetNextViewModel("Home");
             }
         }
     }

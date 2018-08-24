@@ -17,5 +17,14 @@ namespace SoloResultsAnalyzer.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public DelegateCommand SetNextViewModel(string nextViewModel)
+        {
+            return new DelegateCommand(o =>
+            {
+                _nextViewModel = nextViewModel;
+                OnPropertyChanged("nextViewModel");
+            });
+        }
     }
 }

@@ -10,18 +10,37 @@ namespace SoloResultsAnalyzer
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        // Active view model
+        private ViewModelBase _currentViewModel;
 
-        private ViewModelBase _viewModel;
+        // Make view models members so state can persist between view changes
+        private ViewModelBase _homeViewModel;
+        private ViewModelBase _eventImportViewModel;
+        private ViewModelBase _eventReportViewModel;
+        private ViewModelBase _championshipReportViewModel;
+        private ViewModelBase _newSeasonViewModel;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _viewModel = new HomeViewModel();
+            // Initialize view models
+            _homeViewModel = new HomeViewModel();
+            _eventImportViewModel = new EventImportViewModel();
+            // TODO add other view models
 
+            // Set initial view model
+            _currentViewModel = _homeViewModel;
+
+            // Subscribe to PropertyChanged event for all view models
+            _homeViewModel.PropertyChanged += _viewModel_PropertyChanged;
+            _eventImportViewModel.PropertyChanged += _viewModel_PropertyChanged;
+            _eventReportViewModel.PropertyChanged += _viewModel_PropertyChanged;
+            _championshipReportViewModel.PropertyChanged += _viewModel_PropertyChanged;
+            _newSeasonViewModel.PropertyChanged += _viewModel_PropertyChanged;
+
+            // Set data context to this class
             DataContext = this;
-
-            _viewModel.PropertyChanged += _viewModel_PropertyChanged;
 
             // Setup log file
             AppLog = NLog.LogManager.GetLogger(GetType().Name);
@@ -36,55 +55,43 @@ namespace SoloResultsAnalyzer
             }
         }
 
+        /// <summary>
+        /// Handler for current view model's PropertyChanged event. This is mainly used for navigating to a new view
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Event arguments</param>
         private void _viewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // If the view model has requested a view change, handle it
             if (e.PropertyName == "nextViewModel")
             {
-                if (_viewModel._nextViewModel == "Home")
+                switch (_currentViewModel._nextViewModel)
                 {
-                    _viewModel = new HomeViewModel();
+                    case "Home":
+                        _currentViewModel = _homeViewModel;
+                        break;
+                    case "EventImportViewModel":
+                        _currentViewModel = _eventImportViewModel;
+                        break;
+                    // TODO add other view models
+                    default:
+                        // Do nothing
+                        break;
                 }
 
-                if (_viewModel._nextViewModel == "EventImportViewModel")
-                {
-                    _viewModel = new EventImportViewModel();
-                }
-
-                _viewModel.PropertyChanged += _viewModel_PropertyChanged;
-
+                // Tell the view to update
                 OnPropertyChanged("CurrentViewModel");
             }
         }
 
+        /// <summary>
+        /// Getter for the current view model
+        /// </summary>
         public ViewModelBase CurrentViewModel
         {
             get
             {
-                return _viewModel;
-            }
-        }
-
-        public ICommand Import
-        {
-            get
-            {
-                return new DelegateCommand(o =>
-                {
-                    _viewModel = new EventImportViewModel();
-                    OnPropertyChanged("CurrentViewModel");
-                });
-            }
-        }
-
-        public ICommand Home
-        {
-            get
-            {
-                return new DelegateCommand(o =>
-                {
-                    _viewModel = new HomeViewModel();
-                    OnPropertyChanged("CurrentViewModel");
-                });
+                return _currentViewModel;
             }
         }
 

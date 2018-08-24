@@ -13,11 +13,7 @@ namespace SoloResultsAnalyzer.ViewModels
         {
             get
             {
-                return new DelegateCommand(o =>
-                {
-                    _nextViewModel = "EventImportViewModel";
-                    OnPropertyChanged("nextViewModel");
-                });
+                return SetNextViewModel("EventImportViewModel");
             }
         }
     }
