@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoloResultsAnalyzer.DataClasses
+namespace SoloResultsAnalyzer.Models
 {
     public class Result
     {

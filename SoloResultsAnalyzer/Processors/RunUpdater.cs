@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using SoloResultsAnalyzer.Processors;
-using SoloResultsAnalyzer.DataClasses;
+using SoloResultsAnalyzer.Models;
 
 namespace SoloResultsAnalyzer
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
-using SoloResultsAnalyzer.DataClasses;
+using SoloResultsAnalyzer.Models;
 
 namespace SoloResultsAnalyzer.Processors
 {

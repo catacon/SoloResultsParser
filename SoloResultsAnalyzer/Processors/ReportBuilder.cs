@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SoloResultsAnalyzer.DataClasses;
+using SoloResultsAnalyzer.Models;
 
 namespace SoloResultsAnalyzer
 {

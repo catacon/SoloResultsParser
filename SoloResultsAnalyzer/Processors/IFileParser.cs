@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SoloResultsAnalyzer.DataClasses;
+using SoloResultsAnalyzer.Models;
 
 
 namespace SoloResultsAnalyzer.Processors
