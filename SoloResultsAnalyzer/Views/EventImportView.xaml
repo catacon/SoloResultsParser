@@ -3,11 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SoloResultsAnalyzer.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <UniformGrid>
-        <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" />
-        <Button Width="50" Height="50"  Content="Import" Command="{Binding ImportEventData}" />
-    </UniformGrid>
+             xmlns:local="clr-namespace:SoloResultsAnalyzer.Views">
+    <StackPanel>
+        <UniformGrid>
+            <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" />
+            <Button Width="50" Height="50"  Content="Import" Command="{Binding ImportEventData}" />
+            <Button Width="50" Height="50"  Content="Cancel" Command="{Binding CancelEventDataImport}" />
+        </UniformGrid>
+        <DataGrid VerticalAlignment="Stretch" ItemsSource="{Binding Path=EventResults}" AutoGenerateColumns="True"  />
+
+
+    </StackPanel>
 </UserControl>

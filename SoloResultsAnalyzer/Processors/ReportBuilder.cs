@@ -551,8 +551,10 @@ namespace SoloResultsAnalyzer
                         NewResult.ClassId = int.Parse(reader["Class"].ToString());
 
                         string LongName = "";
-                        GetClassString(NewResult.ClassId, ref NewResult.ClassString, ref LongName, Conn);
+                        string ClassName = "";
+                        GetClassString(NewResult.ClassId, ref ClassName, ref LongName, Conn);
 
+                        NewResult.ClassString = ClassName;
                         Results.Add(NewResult);
                     }
                 }

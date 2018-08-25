@@ -8,17 +8,17 @@ namespace SoloResultsAnalyzer.Models
 {
     public class Result
     {
-        public string FirstName;
-        public string LastName;
-        public string Car;
-        public string ClassString;
-        public int ClassId;
-        public int ClassNumber;
-        public List<Run> Runs;
-        public double RawTime;
-        public double PaxTime;
-        public bool Ladies;
-        public bool Novice;
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Car { get; set; }
+        public string ClassString { get; set; }
+        public int ClassId { get; set; }
+        public int ClassNumber { get; set; }
+        public List<Run> Runs { get; set; }
+        public double RawTime { get; set; }
+        public double PaxTime { get; set; }
+        public bool Ladies { get; set; }
+        public bool Novice { get; set; }
 
         public Result()
         {
