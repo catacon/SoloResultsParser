@@ -7,8 +7,14 @@ using SoloResultsAnalyzer.Models;
 
 namespace SoloResultsAnalyzer.Processors
 {
-    class ProntoFileParser : IFileParser
+    public class ProntoFileParser : IFileParser
     {
+        // Default file extension for Pronto data files
+        public string FileExtension { get; }
+
+        // Default file filter for Pronto data files
+        public string FileFilter { get; }
+
         // Number of seconds added to raw time for each cone hit
         readonly int _TimePenaltyForCone = 2;
 
@@ -17,6 +23,12 @@ namespace SoloResultsAnalyzer.Processors
 
         // Number of header lines in Pronto CSV file
         readonly int _ProntoCsvHeaderLines = 1;
+
+        public ProntoFileParser()
+        {
+            FileExtension = ".csv";
+            FileFilter = "CSV Files (*.csv)|*.csv";
+        }
 
         /// <summary>
         /// Parse Pronto CSV event file and populate Run and Results lists

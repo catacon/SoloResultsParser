@@ -4,8 +4,11 @@ using SoloResultsAnalyzer.Models;
 
 namespace SoloResultsAnalyzer.Processors
 {
-    interface IFileParser
+    public interface IFileParser
     {
+        string FileExtension { get; }
+        string FileFilter { get; }
+        
         /// <summary>
         /// Parse event file and populate Run and Results lists
         /// </summary>

@@ -1,5 +1,7 @@
 ﻿using SoloResultsAnalyzer.ViewModels;
 using System.ComponentModel;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Input;
 
@@ -26,13 +28,19 @@ namespace SoloResultsAnalyzer
         // Logging object
         public NLog.Logger _appLog;
 
+        // Event data file parser
+        private Processors.IFileParser _fileParser = new Processors.ProntoFileParser();
+
+        // Database connection for event data
+        private DbConnection _dbConnection = new SqlConnection();
+
         public MainWindow()
         {
             InitializeComponent();
 
             // Initialize view models
             _homeViewModel = new HomeViewModel("Home");
-            _eventImportViewModel = new EventImportViewModel("Import Event Data");
+            _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection);
             _eventReportViewModel = new EventReportViewModel("Create Event Reports");
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
             _newSeasonViewModel = new NewSeasonViewModel("Start New Season");

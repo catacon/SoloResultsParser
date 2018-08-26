@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using SoloResultsAnalyzer.Models;
+using SoloResultsAnalyzer.Processors;
 
 namespace SoloResultsAnalyzer.ViewModels
 {
     public class EventImportViewModel : ViewModelBase
     {
-        // List for storing imported results
-        public List<Result> EventResults { get; set; }
-
-        // List for storing imported runs
-        private List<Run> _eventRuns;
+        // Processor for parsing and inserting event data
+        private Processors.EventDataImporter _dataImporter;
 
         // Flag for indicating data import is active
         private bool _importActive = false;
+
+        // Publicly available event results
+        public List<Result> EventResults
+        {
+            get
+            {
+                return _dataImporter.EventResults;
+            }
+        }
 
         // Command for beginning data import
         public ICommand Import
@@ -47,15 +56,9 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        public EventImportViewModel(string pageTitle) : base(pageTitle)
+        public EventImportViewModel(string pageTitle, IFileParser fileParser, DbConnection dbConnection) : base(pageTitle)
         {
-            EventResults = new List<Result>();
-            EventResults.Add(new Result() { FirstName = "Aaron" });
-            EventResults.Add(new Result() { FirstName = "Matt" });
-            EventResults.Add(new Result() { FirstName = "Jake" });
-            OnPropertyChanged("EventResults");
-
-
+            _dataImporter = new EventDataImporter(fileParser, dbConnection);
         }
 
         /// <summary>
@@ -67,15 +70,23 @@ namespace SoloResultsAnalyzer.ViewModels
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
-            ofd.DefaultExt = ".csv";
-            ofd.Filter = "CSV Files (*.csv)|*.csv";
+            ofd.DefaultExt = _dataImporter.FileExtension;
+            ofd.Filter = _dataImporter.FileFilter;
 
             bool? result = ofd.ShowDialog();
 
             if (result.HasValue && result.Value == true)
             {
                 _importActive = true;
-                // TODO parse data
+                if (_dataImporter.ParseEventData(ofd.FileName))
+                {
+                    MessageBox.Show("Data import successful! Please make necessary edits to data and then save data to database");
+                }
+                else
+                {
+                    MessageBox.Show("Data import failed! Please verify data file format.");
+                    _importActive = false;
+                }
             }
         }
 
@@ -93,7 +104,16 @@ namespace SoloResultsAnalyzer.ViewModels
         /// </summary>
         private void SaveData()
         {
-            // TODO Save data to database
+            if (_dataImporter.SaveData())
+            {
+                MessageBox.Show("Event data saved to database successfully!");
+            }
+            else
+            {
+                MessageBox.Show("Failed to save event data to database!");
+            }
+
+            _importActive = false;
         }
     }
 }

@@ -7,10 +7,16 @@
     <StackPanel>
         <UniformGrid>
             <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" />
-            <Button Width="50" Height="50"  Content="Import" Command="{Binding ImportEventData}" />
-            <Button Width="50" Height="50"  Content="Cancel" Command="{Binding CancelEventDataImport}" />
+            <Button Width="50" Height="50"  Content="Import" Command="{Binding Import}" />
+            <Button Width="50" Height="50"  Content="Cancel" Command="{Binding Cancel}" />
+            <Button Width="50" Height="50"  Content="Save" Command="{Binding Save}" />
         </UniformGrid>
-        <DataGrid VerticalAlignment="Stretch" ItemsSource="{Binding Path=EventResults}" AutoGenerateColumns="True"  />
+        <DataGrid ItemsSource="{Binding Path=EventResults}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
 
     </StackPanel>

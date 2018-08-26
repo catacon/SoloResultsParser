@@ -85,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Run.cs" />
+    <Compile Include="Processors\EventDataImporter.cs" />
     <Compile Include="Processors\ProntoFileParser.cs" />
     <Compile Include="Processors\IFileParser.cs" />
     <Compile Include="Processors\ReportBuilder.cs" />

@@ -14,8 +14,8 @@ namespace SoloResultsAnalyzer
         IFileParser _fileParser;
         SqlConnection _dbConnection;
 
-        public List<Run> _eventRuns = new List<Run>();
-        public List<Result> _eventResults = new List<Result>();
+        private List<Run> _eventRuns = new List<Run>();
+        private List<Result> _eventResults = new List<Result>();
 
         readonly int _defaultClassId = 1;
 
