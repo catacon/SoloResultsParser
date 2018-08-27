@@ -34,13 +34,17 @@ namespace SoloResultsAnalyzer
         // Database connection for event data
         private DbConnection _dbConnection = new SqlConnection();
 
+        private int _seasonYear;
+
+        private int _eventNumber;
+
         public MainWindow()
         {
             InitializeComponent();
 
             // Initialize view models
             _homeViewModel = new HomeViewModel("Home");
-            _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection);
+            _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _seasonYear, _eventNumber);
             _eventReportViewModel = new EventReportViewModel("Create Event Reports");
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
             _newSeasonViewModel = new NewSeasonViewModel("Start New Season");

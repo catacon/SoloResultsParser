@@ -43,7 +43,7 @@ namespace SoloResultsAnalyzer
             }
 
             // Parse event file into runs and results lists
-            if (!_fileParser.ParseEventFile(EventFile, ref _eventRuns, ref _eventResults))
+            if (!_fileParser.ParseEventFile(EventFile, ref _eventResults))
             {
                 Console.WriteLine("Failed to parse event file {0}", EventFile);
                 return false;

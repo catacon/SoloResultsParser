@@ -88,8 +88,10 @@ namespace SoloResultsAnalyzer.Processors
                     // Get the class ID - strip off 'L' from ladies classes
                     string ClassIdQuery = string.Format("SELECT Id FROM Classes WHERE Abbreviation = '{0}'", currentResult.ClassString.Substring(currentResult.ClassString.Length - 1) == "L" ? currentResult.ClassString.Substring(0, currentResult.ClassString.Length - 1) : currentResult.ClassString);
 
-                    using (SqlCommand command = new SqlCommand(ClassIdQuery, _dbConnection))
+                    using (DbCommand command = _dbConnection.CreateCommand())
                     {
+                        command.CommandText = ClassIdQuery;
+
                         try
                         {
                             currentResult.ClassId = (int)command.ExecuteScalar();
@@ -116,8 +118,47 @@ namespace SoloResultsAnalyzer.Processors
             return true;
         }
 
-        public bool SaveData()
+        public bool SaveData(int seasonYear, int eventNumber)
         {
+            // Create result insert query - TODO add runs
+            String ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,Ladies,Novice) VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@Ladies,@Novice)";
+
+            // Open database
+            _dbConnection.Open();
+
+            foreach (Models.Result currentResult in _eventResults)
+            {
+                // Insert result into database                  
+                DbCommand command = _dbConnection.CreateCommand();
+                
+                command.CommandText = ResultInsertQuery;
+
+                Utilities.Extensions.AddParamWithValue(ref command, "@Season", seasonYear);
+                Utilities.Extensions.AddParamWithValue(ref command, "@Event", eventNumber);
+                Utilities.Extensions.AddParamWithValue(ref command, "@FirstName", currentResult.FirstName);
+                Utilities.Extensions.AddParamWithValue(ref command, "@LastName", currentResult.LastName);
+                Utilities.Extensions.AddParamWithValue(ref command, "@Car", currentResult.Car);
+                Utilities.Extensions.AddParamWithValue(ref command, "@Class", currentResult.ClassId);
+                Utilities.Extensions.AddParamWithValue(ref command, "@Number", currentResult.ClassNumber);
+                Utilities.Extensions.AddParamWithValue(ref command, "@RawTime", currentResult.RawTime);
+                Utilities.Extensions.AddParamWithValue(ref command, "@PaxTime", currentResult.PaxTime);
+                Utilities.Extensions.AddParamWithValue(ref command, "@Ladies", currentResult.IsLadies ? 1 : 0);
+                Utilities.Extensions.AddParamWithValue(ref command, "@Novice", currentResult.IsNovice ? 1 : 0);
+                // TODO insert runs
+
+                // Execute insert command
+                int result = command.ExecuteNonQuery();
+
+                // Check Error
+                if (result < 0)
+                {
+                    Console.WriteLine("Error inserting result data into Database!");
+                    // TODO handle error
+                }
+            }
+
+            _dbConnection.Close();
+
             return true;
         }
     }

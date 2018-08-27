@@ -14,9 +14,13 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class EventImportViewModel : ViewModelBase
     {
-        private Processors.EventDataImporter _dataImporter;
+        private EventDataImporter _dataImporter;
 
         private bool _importActive = false;
+
+        private int _seasonYear;
+
+        private int _eventNumber;
 
         public List<Result> EventResults
         {
@@ -55,22 +59,22 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        public EventImportViewModel(string pageTitle, IFileParser fileParser, DbConnection dbConnection) : base(pageTitle)
+        public EventImportViewModel(string pageTitle, IFileParser fileParser, DbConnection dbConnection, int seasonYear, int eventNumber) : base(pageTitle)
         {
             _dataImporter = new EventDataImporter(fileParser, dbConnection);
+            _seasonYear = seasonYear;
+            _eventNumber = eventNumber;
         }
 
+        // TODO better name?
         private void PromptUserForDataFile()
         {
-            // Create file browser
-            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-
-            // Set filter for file extension and default file extension 
-            ofd.DefaultExt = _dataImporter.FileExtension;
-            ofd.Filter = _dataImporter.FileFilter;
+            // Create file browser with filters
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog() { DefaultExt = _dataImporter.FileExtension, Filter = _dataImporter.FileFilter };
 
             bool? result = ofd.ShowDialog();
 
+            // If user selected a file, attempt to import the data
             if (result.HasValue && result.Value == true)
             {
                 if (ImportData(ofd.FileName))
@@ -110,7 +114,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private void SaveData()
         {
-            if (_dataImporter.SaveData())
+            if (_dataImporter.SaveData(_seasonYear, _eventNumber))
             {
                 MessageBox.Show("Event data saved to database successfully!");
             }
