@@ -10,12 +10,11 @@ namespace SoloResultsAnalyzer.Processors
         string FileFilter { get; }
         
         /// <summary>
-        /// Parse event file and populate Run and Results lists
+        /// Parse event file and populate Results lists
         /// </summary>
         /// <param name="EventFile">Event data file to parse</param>
-        /// <param name="Runs">List of runs that will be populated from event file</param>
         /// <param name="Results">List of results that will be populated from event file</param>
         /// <returns>True if file was parsed successfully. False otherwise.</returns>
-        bool ParseEventFile(string EventFile, ref List<Run> EventRuns, ref List<Result> EventResults);
+        bool ParseEventFile(string EventFile, ref List<Result> EventResults);
     }
 }

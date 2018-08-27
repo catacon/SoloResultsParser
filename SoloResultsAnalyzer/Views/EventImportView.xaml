@@ -4,20 +4,37 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SoloResultsAnalyzer.Views">
-    <StackPanel>
-        <UniformGrid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <UniformGrid Grid.Row="0">
             <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" />
             <Button Width="50" Height="50"  Content="Import" Command="{Binding Import}" />
             <Button Width="50" Height="50"  Content="Cancel" Command="{Binding Cancel}" />
             <Button Width="50" Height="50"  Content="Save" Command="{Binding Save}" />
         </UniformGrid>
-        <DataGrid ItemsSource="{Binding Path=EventResults}" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Path=EventResults, IsAsync=True}" AutoGenerateColumns="False" SelectionMode="Single" CanUserDeleteRows="False" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
-                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="*"  />
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="*" />
+                <DataGridTextColumn Header="Number" Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="ClassNumber" />
+                            <Binding Path="ClassString" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Car" Binding="{Binding Car}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Raw Time" Binding="{Binding RawTime}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="PAX Time" Binding="{Binding PaxTime}" IsReadOnly="True" Width="*" />
+                <DataGridCheckBoxColumn Header="Ladies" Binding="{Binding IsLadies}" Width="*" />
+                <DataGridCheckBoxColumn Header="Novice" Binding="{Binding IsNovice}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
 
-    </StackPanel>
+    </Grid>
 </UserControl>

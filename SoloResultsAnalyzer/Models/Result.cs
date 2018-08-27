@@ -17,8 +17,8 @@ namespace SoloResultsAnalyzer.Models
         public List<Run> Runs { get; set; }
         public double RawTime { get; set; }
         public double PaxTime { get; set; }
-        public bool Ladies { get; set; }
-        public bool Novice { get; set; }
+        public bool IsLadies { get; set; }
+        public bool IsNovice { get; set; }
 
         public Result()
         {

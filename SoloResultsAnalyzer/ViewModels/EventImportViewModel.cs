@@ -14,31 +14,31 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class EventImportViewModel : ViewModelBase
     {
-        // Processor for parsing and inserting event data
         private Processors.EventDataImporter _dataImporter;
 
-        // Flag for indicating data import is active
         private bool _importActive = false;
 
-        // Publicly available event results
         public List<Result> EventResults
         {
             get
             {
                 return _dataImporter.EventResults;
             }
+
+            set
+            {
+                _dataImporter.EventResults = value;
+            }
         }
 
-        // Command for beginning data import
         public ICommand Import
         {
             get
             {
-                return new DelegateCommand(o => ImportData(), o => { return !_importActive; });
+                return new DelegateCommand(o => PromptUserForDataFile(), o => { return !_importActive; });
             }
         }
 
-        // Command to abandon current data import
         public ICommand Cancel
         {
             get
@@ -47,7 +47,6 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        // Command to save current data import to database
         public ICommand Save
         {
             get
@@ -61,10 +60,7 @@ namespace SoloResultsAnalyzer.ViewModels
             _dataImporter = new EventDataImporter(fileParser, dbConnection);
         }
 
-        /// <summary>
-        /// Begin data import process
-        /// </summary>
-        private void ImportData()
+        private void PromptUserForDataFile()
         {
             // Create file browser
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
@@ -77,31 +73,41 @@ namespace SoloResultsAnalyzer.ViewModels
 
             if (result.HasValue && result.Value == true)
             {
-                _importActive = true;
-                if (_dataImporter.ParseEventData(ofd.FileName))
+                if (ImportData(ofd.FileName))
                 {
                     MessageBox.Show("Data import successful! Please make necessary edits to data and then save data to database");
                 }
                 else
                 {
                     MessageBox.Show("Data import failed! Please verify data file format.");
-                    _importActive = false;
                 }
             }
         }
 
-        /// <summary>
-        /// Cancel current data import
-        /// </summary>
+        private bool ImportData(string eventFile)
+        {
+            _importActive = true;
+
+            if (_dataImporter.ImportEventData(eventFile))
+            {
+                OnPropertyChanged("EventResults");
+                return true;
+            }
+            else
+            {
+                _importActive = false;
+                return false;
+            }
+
+        }
+
         private void CancelImport()
         {
             _importActive = false;
-            // TODO cancel data import
+            EventResults.Clear();
+            OnPropertyChanged("EventResults");
         }
 
-        /// <summary>
-        /// Commit current event data to database
-        /// </summary>
         private void SaveData()
         {
             if (_dataImporter.SaveData())

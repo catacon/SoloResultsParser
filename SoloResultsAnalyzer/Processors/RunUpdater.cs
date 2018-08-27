@@ -105,8 +105,8 @@ namespace SoloResultsAnalyzer
                     command.Parameters.AddWithValue("@Number", currentResult.ClassNumber);
                     command.Parameters.AddWithValue("@RawTime", currentResult.RawTime);
                     command.Parameters.AddWithValue("@PaxTime", currentResult.PaxTime);
-                    command.Parameters.AddWithValue("@Ladies", currentResult.Ladies ? 1 : 0);
-                    command.Parameters.AddWithValue("@Novice", currentResult.Novice ? 1 : 0);
+                    command.Parameters.AddWithValue("@Ladies", currentResult.IsLadies ? 1 : 0);
+                    command.Parameters.AddWithValue("@Novice", currentResult.IsNovice ? 1 : 0);
 
                     // Execute insert command
                     int result = command.ExecuteNonQuery();
@@ -135,8 +135,8 @@ namespace SoloResultsAnalyzer
                         command.Parameters.AddWithValue("@RawTime", currentResult.Runs[iRun].RawTime);
                         command.Parameters.AddWithValue("@Cones", currentResult.Runs[iRun].Cones);
                         command.Parameters.AddWithValue("@Penalty", (int)currentResult.Runs[iRun].Penalty);
-                        command.Parameters.AddWithValue("@Ladies", currentResult.Ladies ? 1 : 0);
-                        command.Parameters.AddWithValue("@Novice", currentResult.Novice ? 1 : 0);
+                        command.Parameters.AddWithValue("@Ladies", currentResult.IsLadies ? 1 : 0);
+                        command.Parameters.AddWithValue("@Novice", currentResult.IsNovice ? 1 : 0);
 
                         // Execute insert command
                         int result = command.ExecuteNonQuery();

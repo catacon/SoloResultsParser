@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,37 +10,28 @@ namespace SoloResultsAnalyzer.Processors
 {
     public class EventDataImporter
     {
-        // Parser object for extracting data from event file
         private IFileParser _fileParser;
 
-        // Connection to database in which data will be stored
         private DbConnection _dbConnection;
 
-        // Container for event results
         private List<Models.Result> _eventResults = new List<Models.Result>();
 
-        // Container for event runs
-        private List<Models.Run> _eventRuns = new List<Models.Run>();
+        // Default ID if class is not found
+        readonly int _defaultClassId = 1;
 
-        // Publicly accessible results container
         public List<Models.Result> EventResults
         {
             get
             {
                 return _eventResults;
             }
-        }
 
-        // Publicly accessible runs container
-        public List<Models.Run> EventRuns
-        {
-            get
+            set
             {
-                return _eventRuns;
+                _eventResults = value;
             }
         }
 
-        // File extension for data files
         public string FileExtension
         {
             get
@@ -48,12 +40,11 @@ namespace SoloResultsAnalyzer.Processors
             }
         }
 
-        // File filter for data files
         public string FileFilter
         {
             get
             {
-                return _fileParser.FileExtension;
+                return _fileParser.FileFilter;
             }
         }
 
@@ -62,12 +53,67 @@ namespace SoloResultsAnalyzer.Processors
             _fileParser = fileParser ?? throw new ArgumentNullException("fileParser");
             _dbConnection = dbConnection ?? throw new ArgumentNullException("dbConnection");
 
-            _eventResults.Add(new Models.Result() { FirstName = "Aaron", LastName = "Hall" });
         }
 
-        public bool ParseEventData(string eventFile)
+        public bool ImportEventData(string eventFile)
         {
-            return _fileParser.ParseEventFile(eventFile, ref _eventRuns, ref _eventResults);
+            if (!_fileParser.ParseEventFile(eventFile, ref _eventResults))
+            {
+                // TODO log
+                return false;
+            }
+
+            if (!UpdateClassIds())
+            {
+                // TODO log
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ParseEventData(string eventFile)
+        {
+            return _fileParser.ParseEventFile(eventFile, ref _eventResults);
+        }
+
+        private bool UpdateClassIds()
+        {
+            try
+            {
+                _dbConnection.Open();
+
+                foreach (Models.Result currentResult in _eventResults)
+                {
+                    // Get the class ID - strip off 'L' from ladies classes
+                    string ClassIdQuery = string.Format("SELECT Id FROM Classes WHERE Abbreviation = '{0}'", currentResult.ClassString.Substring(currentResult.ClassString.Length - 1) == "L" ? currentResult.ClassString.Substring(0, currentResult.ClassString.Length - 1) : currentResult.ClassString);
+
+                    using (SqlCommand command = new SqlCommand(ClassIdQuery, _dbConnection))
+                    {
+                        try
+                        {
+                            currentResult.ClassId = (int)command.ExecuteScalar();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Unable to get class ID");
+                            Console.WriteLine("Exception caught while getting class ID: {0}", ex.Message);
+                            currentResult.ClassId = _defaultClassId;
+                            return false;
+                        }
+                    }
+
+                }
+
+                _dbConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("UpdateClassIDs() Exception: {0}", ex.ToString());
+                return false;
+            }
+
+            return true;
         }
 
         public bool SaveData()

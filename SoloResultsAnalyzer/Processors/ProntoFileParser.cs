@@ -31,16 +31,14 @@ namespace SoloResultsAnalyzer.Processors
         }
 
         /// <summary>
-        /// Parse Pronto CSV event file and populate Run and Results lists
+        /// Parse Pronto CSV event file and populate Results lists
         /// </summary>
         /// <param name="EventFile">Pronto CSV file to parse</param>
-        /// <param name="Runs">List of runs that will be populated from event file</param>
         /// <param name="Results">List of results that will be populated from event file</param>
         /// <returns>True if file was parsed successfully. False otherwise.</returns>
-        public bool ParseEventFile(string EventFile, ref List<Run> Runs, ref List<Result> Results)
+        public bool ParseEventFile(string EventFile, ref List<Result> Results)
         {
             // Initialize output lists
-            Runs.Clear();
             Results.Clear();
 
             // Verify event file exists
@@ -107,7 +105,7 @@ namespace SoloResultsAnalyzer.Processors
                     }
                     else if (penalty == "RL")
                     {
-                        // Pronto abbreviate for Rerun is RRN, but it stores them as RL (redlight?)
+                        // Pronto abbreviation for Rerun is RRN, but it stores them as RL (redlight?)
                         run.Penalty = RunPenalty.RRN;
                         run.CorrectedTime = 999.999;
                     }
@@ -122,7 +120,9 @@ namespace SoloResultsAnalyzer.Processors
 
                 // Sort runs to find best corrected time
                 NewResult.Runs = NewResult.Runs.OrderBy(x => x.CorrectedTime).ToList();
-                NewResult.RawTime = NewResult.Runs.First().CorrectedTime;
+                NewResult.RawTime = double.Parse(Fields[9]);// NewResult.Runs.First().CorrectedTime;
+                NewResult.PaxTime = double.Parse(Fields[10]);
+                Results.Add(NewResult); // TODO
             }
 
             return true;
