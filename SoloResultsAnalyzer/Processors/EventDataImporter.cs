@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SoloResultsAnalyzer.Processors
 {
@@ -57,7 +59,7 @@ namespace SoloResultsAnalyzer.Processors
 
         public bool ImportEventData(string eventFile)
         {
-            if (!_fileParser.ParseEventFile(eventFile, ref _eventResults))
+            if (!ParseEventData(eventFile))
             {
                 // TODO log
                 return false;
@@ -121,7 +123,7 @@ namespace SoloResultsAnalyzer.Processors
         public bool SaveData(int seasonYear, int eventNumber)
         {
             // Create result insert query - TODO add runs
-            String ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,Ladies,Novice) VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@Ladies,@Novice)";
+            string ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice,Runs) VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice,@Runs)";
 
             // Open database
             _dbConnection.Open();
@@ -142,9 +144,15 @@ namespace SoloResultsAnalyzer.Processors
                 Utilities.Extensions.AddParamWithValue(ref command, "@Number", currentResult.ClassNumber);
                 Utilities.Extensions.AddParamWithValue(ref command, "@RawTime", currentResult.RawTime);
                 Utilities.Extensions.AddParamWithValue(ref command, "@PaxTime", currentResult.PaxTime);
-                Utilities.Extensions.AddParamWithValue(ref command, "@Ladies", currentResult.IsLadies ? 1 : 0);
-                Utilities.Extensions.AddParamWithValue(ref command, "@Novice", currentResult.IsNovice ? 1 : 0);
-                // TODO insert runs
+                Utilities.Extensions.AddParamWithValue(ref command, "@IsLadies", currentResult.IsLadies ? 1 : 0);
+                Utilities.Extensions.AddParamWithValue(ref command, "@IsNovice", currentResult.IsNovice ? 1 : 0);
+
+                // TODO
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Models.Run>));
+                MemoryStream ms = new MemoryStream();
+                serializer.Serialize(ms, currentResult.Runs);
+
+                Utilities.Extensions.AddParamWithValue(ref command, "@Runs", ms.ToArray());
 
                 // Execute insert command
                 int result = command.ExecuteNonQuery();

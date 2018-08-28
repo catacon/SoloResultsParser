@@ -31,16 +31,20 @@ namespace SoloResultsAnalyzer
         // Event data file parser
         private Processors.IFileParser _fileParser = new Processors.ProntoFileParser();
 
+        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+
         // Database connection for event data
-        private DbConnection _dbConnection = new SqlConnection();
+        private DbConnection _dbConnection;
 
-        private int _seasonYear;
+        private int _seasonYear = 2018;
 
-        private int _eventNumber;
+        private int _eventNumber = 7;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            _dbConnection = new SqlConnection(_dbConnectionString);
 
             // Initialize view models
             _homeViewModel = new HomeViewModel("Home");
