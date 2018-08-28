@@ -88,6 +88,7 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
+        // TODO async
         private bool ImportData(string eventFile)
         {
             _importActive = true;

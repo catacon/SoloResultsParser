@@ -47,7 +47,7 @@ namespace SoloResultsAnalyzer
             _dbConnection = new SqlConnection(_dbConnectionString);
 
             // Initialize view models
-            _homeViewModel = new HomeViewModel("Home");
+            _homeViewModel = new HomeViewModel("Home", _seasonYear);
             _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _seasonYear, _eventNumber);
             _eventReportViewModel = new EventReportViewModel("Create Event Reports");
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");

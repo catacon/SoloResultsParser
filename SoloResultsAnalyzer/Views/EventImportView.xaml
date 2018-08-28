@@ -7,15 +7,22 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
-        <UniformGrid Grid.Row="0">
-            <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" />
-            <Button Width="50" Height="50"  Content="Import" Command="{Binding Import}" />
-            <Button Width="50" Height="50"  Content="Cancel" Command="{Binding Cancel}" />
-            <Button Width="50" Height="50"  Content="Save" Command="{Binding Save}" />
-        </UniformGrid>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Path=EventResults, IsAsync=True}" AutoGenerateColumns="False" SelectionMode="Single" CanUserDeleteRows="False" CanUserAddRows="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        
+        <WrapPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" Margin="10" Padding="5" />
+            <Button Width="50" Height="50"  Content="Import" Command="{Binding Import}" Margin="10" Padding="5" />
+            <Button Width="50" Height="50"  Content="Cancel" Command="{Binding Cancel}" Margin="10" Padding="5" />
+            <Button Width="50" Height="50"  Content="Save" Command="{Binding Save}" Margin="10" Padding="5" />
+        </WrapPanel>
+        <DataGrid Grid.Column="1" ItemsSource="{Binding Path=EventResults, IsAsync=True}" 
+                  AutoGenerateColumns="False" SelectionMode="Single" CanUserDeleteRows="False" CanUserAddRows="False"
+                  CanUserResizeRows="False"
+                  AlternationCount="2" AlternatingRowBackground="AliceBlue">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="*"  />
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="*" />
@@ -27,7 +34,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Car" Binding="{Binding Car}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Car" Binding="{Binding Car}" IsReadOnly="True" Width="3*" />
                 <DataGridTextColumn Header="Raw Time" Binding="{Binding RawTime}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="PAX Time" Binding="{Binding PaxTime}" IsReadOnly="True" Width="*" />
                 <DataGridCheckBoxColumn Header="Ladies" Binding="{Binding IsLadies}" Width="*" />

@@ -7,12 +7,39 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <UniformGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2">
-            <Button Content="Import Runs" Command="{Binding Import}" Margin="5" />
-            <Button Content="Create Event Reports" Command="{Binding EventReport}" Margin="5" />
-            <Button Content="Update Championships" Command="{Binding ChampionshipReport}" Margin="5" />
-            <Button Content="New Season" Command="{Binding NewSeason}" Margin="5" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
 
-        </UniformGrid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+               Content="STL Solo Results Analyzer" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+        <WrapPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Button Content="Import Runs" Command="{Binding Import}" Margin="20" Padding="5" />
+            <Button Content="Create Event Reports" Command="{Binding EventReport}" Margin="20" Padding="5" />
+            <Button Content="Update Championships" Command="{Binding ChampionshipReport}" Margin="20" Padding="5" />
+            <Button Content="New Season" Command="{Binding NewSeason}" Margin="20" Padding="5" />
+        </WrapPanel>
+
+        <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Label Content="{Binding SeasonYear, FallbackValue=2000}" ContentStringFormat=" {0} Season" FontSize="36"/>
+            <Label Content="Event 1" />
+            <Label Content="Event 2" />
+            <Label Content="Event 3" />
+            <Label Content="Event 4" />
+            <Label Content="Event 5" />
+            <Label Content="Event 6" />
+            <Label Content="Event 7" />
+            <Label Content="Event 8" />
+            <Label Content="Event 9" />
+            <Label Content="Event 10" />
+        </WrapPanel>
+        
     </Grid>
 </UserControl>

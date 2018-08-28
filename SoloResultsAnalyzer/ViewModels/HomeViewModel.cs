@@ -9,10 +9,20 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        public HomeViewModel(string pageTitle) : base(pageTitle)
-        {
+        private int _seasonYear;
 
+        public HomeViewModel(string pageTitle, int seasonYear) : base(pageTitle)
+        {
+            _seasonYear = seasonYear;
         }
+
+        public int SeasonYear
+        {
+            get
+            {
+                return _seasonYear;
+            }
+        } 
 
         /// <summary>
         /// Command for navigating to event data import view
