@@ -79,6 +79,11 @@ namespace SoloResultsAnalyzer.Processors
             return _fileParser.ParseEventFile(eventFile, ref _eventResults);
         }
 
+        private bool CheckForExistingDrivers()
+        {
+            return true;
+        }
+
         private bool UpdateClassIds()
         {
             try
@@ -122,52 +127,89 @@ namespace SoloResultsAnalyzer.Processors
 
         public bool SaveData(int seasonYear, int eventNumber)
         {
-            // Create result insert query - TODO add runs
-            string ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice,Runs) VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice,@Runs)";
-
             // Open database
             _dbConnection.Open();
 
             foreach (Models.Result currentResult in _eventResults)
             {
+                int resultId = 0;
+
                 // Insert result into database                  
-                DbCommand command = _dbConnection.CreateCommand();
-                
-                command.CommandText = ResultInsertQuery;
-
-                Utilities.Extensions.AddParamWithValue(ref command, "@Season", seasonYear);
-                Utilities.Extensions.AddParamWithValue(ref command, "@Event", eventNumber);
-                Utilities.Extensions.AddParamWithValue(ref command, "@FirstName", currentResult.FirstName);
-                Utilities.Extensions.AddParamWithValue(ref command, "@LastName", currentResult.LastName);
-                Utilities.Extensions.AddParamWithValue(ref command, "@Car", currentResult.Car);
-                Utilities.Extensions.AddParamWithValue(ref command, "@Class", currentResult.ClassId);
-                Utilities.Extensions.AddParamWithValue(ref command, "@Number", currentResult.ClassNumber);
-                Utilities.Extensions.AddParamWithValue(ref command, "@RawTime", currentResult.RawTime);
-                Utilities.Extensions.AddParamWithValue(ref command, "@PaxTime", currentResult.PaxTime);
-                Utilities.Extensions.AddParamWithValue(ref command, "@IsLadies", currentResult.IsLadies ? 1 : 0);
-                Utilities.Extensions.AddParamWithValue(ref command, "@IsNovice", currentResult.IsNovice ? 1 : 0);
-
-                // TODO
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Models.Run>));
-                MemoryStream ms = new MemoryStream();
-                serializer.Serialize(ms, currentResult.Runs);
-
-                Utilities.Extensions.AddParamWithValue(ref command, "@Runs", ms.ToArray());
-
-                // Execute insert command
-                int result = command.ExecuteNonQuery();
-
-                // Check Error
-                if (result < 0)
+                using (DbCommand resultInsertCommand = CreateResultInsertCommand(currentResult, seasonYear, eventNumber))
                 {
-                    Console.WriteLine("Error inserting result data into Database!");
-                    // TODO handle error
+                    // Execute insert command
+                    resultId = (int)resultInsertCommand.ExecuteScalar();
+
+                    // Check Error
+                    if (resultId < 0)
+                    {
+                        Console.WriteLine("Error inserting result data into Database!");
+                        // TODO handle error
+                    }
+                }
+
+                // Store each run and associate it with the result
+                foreach (Models.Run currentRun in currentResult.Runs)
+                {
+                    using (DbCommand runInsertCommand = CreateRunInsertCommand(currentRun, resultId))
+                    {
+                        int result = runInsertCommand.ExecuteNonQuery();
+
+                        // Check Error
+                        if (result < 0)
+                        {
+                            Console.WriteLine("Error inserting run data into Database!");
+                            // TODO handle error
+                        }
+                    }
                 }
             }
 
             _dbConnection.Close();
 
             return true;
+        }
+
+        private DbCommand CreateResultInsertCommand(Models.Result result, int seasonYear, int eventNumber)
+        {
+            string ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice,Runs) " +
+                                    "OUTPUT INSERTED.ID " +
+                                    "VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice,@Runs)";
+
+            DbCommand resultInsertCommand = _dbConnection.CreateCommand();
+
+            resultInsertCommand.CommandText = ResultInsertQuery;
+
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Season", seasonYear);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Event", eventNumber);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@FirstName", result.FirstName);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@LastName", result.LastName);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Car", result.Car);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Class", result.ClassId);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Number", result.ClassNumber);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@RawTime", result.RawTime);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@PaxTime", result.PaxTime);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsLadies", result.IsLadies ? 1 : 0);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsNovice", result.IsNovice ? 1 : 0);
+
+            return resultInsertCommand;
+        }
+
+        private DbCommand CreateRunInsertCommand(Models.Run run, int resultId)
+        {
+            string RunInsertQuery = "INSERT INTO Runs (RunNumber,RawTime,Cones,Penalty,ResultId) VALUES (@RunNumber,@RawTime,@Cones,@Penalty,@ResultId)";
+
+            DbCommand runInsertCommand = _dbConnection.CreateCommand();
+
+            runInsertCommand.CommandText = RunInsertQuery;
+
+            Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@RunNumber", run.RunNumber);
+            Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@RawTime", run.RawTime);
+            Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@Cones", run.Cones);
+            Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@Penalty", run.Penalty);
+            Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@ResultId", resultId);
+
+            return runInsertCommand;
         }
     }
 }

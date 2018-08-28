@@ -63,7 +63,6 @@ namespace SoloResultsAnalyzer.Processors
                 // PAX pos, class, number, fname, lname, car year, car make, car model, car color, best run, pax time, time, cones, penalty, ...
                 string[] Fields = Parser.ReadFields();
 
-                // TODO define min lines
                 if (Fields.Length < _ProntoCsvMinFields)
                 {
                     Console.WriteLine("Failed to read line {0}", Parser.LineNumber);
@@ -118,11 +117,10 @@ namespace SoloResultsAnalyzer.Processors
                     NewResult.Runs.Add(run);
                 }
 
-                // Sort runs to find best corrected time
                 NewResult.Runs = NewResult.Runs.OrderBy(x => x.CorrectedTime).ToList();
-                NewResult.RawTime = double.Parse(Fields[9]);// NewResult.Runs.First().CorrectedTime;
+                NewResult.RawTime = double.Parse(Fields[9]);
                 NewResult.PaxTime = double.Parse(Fields[10]);
-                Results.Add(NewResult); // TODO
+                Results.Add(NewResult);
             }
 
             return true;
