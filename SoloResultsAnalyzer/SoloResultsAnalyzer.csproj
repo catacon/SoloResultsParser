@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Driver.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Run.cs" />
     <Compile Include="Processors\EventDataImporter.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Processors\RunUpdater.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\Settings.cs" />
+    <Compile Include="Utilities\ValueConverters.cs" />
     <Compile Include="ViewModels\ChampionshipReportViewModel.cs" />
     <Compile Include="ViewModels\EventImportViewModel.cs" />
     <Compile Include="ViewModels\EventReportViewModel.cs" />

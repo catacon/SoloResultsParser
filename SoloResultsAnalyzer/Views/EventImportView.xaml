@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SoloResultsAnalyzer.Views">
+             xmlns:local="clr-namespace:SoloResultsAnalyzer.Views"
+             xmlns:utilities="clr-namespace:SoloResultsAnalyzer.Utilities">
+    <UserControl.Resources>
+        <utilities:BoolToBrushConverter x:Key="DriverExists" FalseValue="LightPink" TrueValue="Transparent" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -22,10 +26,23 @@
         <DataGrid Grid.Column="1" ItemsSource="{Binding Path=EventResults, IsAsync=True}" 
                   AutoGenerateColumns="False" SelectionMode="Single" CanUserDeleteRows="False" CanUserAddRows="False"
                   CanUserResizeRows="False"
-                  AlternationCount="2" AlternatingRowBackground="AliceBlue">
+                  AlternationCount="2" AlternatingRowBackground="AliceBlue"
+                  SelectedItem="{Binding SelectedResult}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="*"  />
-                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="*" />
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="{Binding DriverExists, Converter={StaticResource DriverExists}}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="{Binding DriverExists, Converter={StaticResource DriverExists}}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Number" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding StringFormat="{}{0} {1}">

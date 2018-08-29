@@ -65,11 +65,9 @@ namespace SoloResultsAnalyzer.Processors
                 return false;
             }
 
-            if (!UpdateClassIds())
-            {
-                // TODO log
-                return false;
-            }
+            CheckForExistingDrivers();
+
+            UpdateClassIds();
 
             return true;
         }
@@ -79,50 +77,42 @@ namespace SoloResultsAnalyzer.Processors
             return _fileParser.ParseEventFile(eventFile, ref _eventResults);
         }
 
-        private bool CheckForExistingDrivers()
+        private void CheckForExistingDrivers()
         {
-            return true;
+            _dbConnection.Open();
+
+            foreach (Models.Result result in _eventResults)
+            {
+                using (DbCommand driverQueryCommand = CreateDriverCommand(result.FirstName, result.LastName))
+                {
+                    int queryResult = (int)driverQueryCommand.ExecuteScalar();
+
+                    if (queryResult > 0)
+                    {
+                        result.DriverExists = true;
+                    }
+                }
+            }
+
+            _dbConnection.Close();
         }
 
-        private bool UpdateClassIds()
+        private void UpdateClassIds()
         {
-            try
+            _dbConnection.Open();
+
+            foreach (Models.Result currentResult in _eventResults)
             {
-                _dbConnection.Open();
+                // Strip off 'L' from ladies classes
+                string classString = currentResult.ClassString.Substring(currentResult.ClassString.Length - 1) == "L" ? currentResult.ClassString.Substring(0, currentResult.ClassString.Length - 1) : currentResult.ClassString;
 
-                foreach (Models.Result currentResult in _eventResults)
-                {
-                    // Get the class ID - strip off 'L' from ladies classes
-                    string ClassIdQuery = string.Format("SELECT Id FROM Classes WHERE Abbreviation = '{0}'", currentResult.ClassString.Substring(currentResult.ClassString.Length - 1) == "L" ? currentResult.ClassString.Substring(0, currentResult.ClassString.Length - 1) : currentResult.ClassString);
-
-                    using (DbCommand command = _dbConnection.CreateCommand())
-                    {
-                        command.CommandText = ClassIdQuery;
-
-                        try
-                        {
-                            currentResult.ClassId = (int)command.ExecuteScalar();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("Unable to get class ID");
-                            Console.WriteLine("Exception caught while getting class ID: {0}", ex.Message);
-                            currentResult.ClassId = _defaultClassId;
-                            return false;
-                        }
-                    }
-
+                using (DbCommand command = CreateClassCommand(classString))
+                { 
+                    currentResult.ClassId = (int)command.ExecuteScalar();
                 }
-
-                _dbConnection.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("UpdateClassIDs() Exception: {0}", ex.ToString());
-                return false;
             }
 
-            return true;
+            _dbConnection.Close();
         }
 
         public bool SaveData(int seasonYear, int eventNumber)
@@ -210,6 +200,33 @@ namespace SoloResultsAnalyzer.Processors
             Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@ResultId", resultId);
 
             return runInsertCommand;
+        }
+
+        private DbCommand CreateDriverCommand(string firstName, string lastName)
+        {
+            string DriverQuery = "SELECT COUNT(*) FROM Drivers WHERE FirstName = @firstName AND LastName = @lastName";
+
+            DbCommand driverQueryCommand = _dbConnection.CreateCommand();
+
+            driverQueryCommand.CommandText = DriverQuery;
+
+            Utilities.Extensions.AddParamWithValue(ref driverQueryCommand, "firstName", firstName);
+            Utilities.Extensions.AddParamWithValue(ref driverQueryCommand, "lastName", lastName);
+
+            return driverQueryCommand;
+        }
+
+        private DbCommand CreateClassCommand(string classString)
+        {
+            string ClassIdQuery = "SELECT Id FROM Classes WHERE Abbreviation = @classString";
+
+            DbCommand classQueryCommand = _dbConnection.CreateCommand();
+
+            Utilities.Extensions.AddParamWithValue(ref classQueryCommand, "classString", classString);
+
+            classQueryCommand.CommandText = ClassIdQuery;
+
+            return classQueryCommand;
         }
     }
 }

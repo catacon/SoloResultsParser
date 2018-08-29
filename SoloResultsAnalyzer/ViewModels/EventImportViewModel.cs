@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using SoloResultsAnalyzer.Models;
 using SoloResultsAnalyzer.Processors;
@@ -22,6 +23,8 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private int _eventNumber;
 
+        private Result _selectedResult;
+
         public List<Result> EventResults
         {
             get
@@ -32,6 +35,19 @@ namespace SoloResultsAnalyzer.ViewModels
             set
             {
                 _dataImporter.EventResults = value;
+            }
+        }
+
+        public Result SelectedResult
+        {
+            get
+            {
+                return _selectedResult;
+            }
+            
+            set
+            {
+                _selectedResult = value;
             }
         }
 
@@ -56,6 +72,17 @@ namespace SoloResultsAnalyzer.ViewModels
             get
             {
                 return new DelegateCommand(o => SaveData(), o => { return _importActive; });
+            }
+        }
+
+        public ICommand CellValueChanged
+        {
+            get
+            {
+                return new DelegateCommand(o =>
+                {
+                    int x = 0;
+                });
             }
         }
 
