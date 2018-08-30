@@ -81,14 +81,7 @@ namespace SoloResultsAnalyzer.ViewModels
             {
                 return new DelegateCommand(o =>
                 {
-                    if (_dataImporter.CheckForSingleExistingDriver(_selectedResult.FirstName, _selectedResult.LastName))
-                    {
-                        _selectedResult.DriverExists = true;
-                    }
-                    else
-                    {
-                        _selectedResult.DriverExists = false;
-                    }
+                    _dataImporter.CheckForSingleExistingDriver(_selectedResult);
                 });
             }
         }
@@ -142,6 +135,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private void CancelImport()
         {
+            // TODO verify cancel
             _importActive = false;
             EventResults.Clear();
             OnPropertyChanged("EventResults");

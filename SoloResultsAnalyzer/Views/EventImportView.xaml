@@ -58,8 +58,8 @@
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Car" Binding="{Binding Car}" IsReadOnly="True" Width="3*" />
-                <DataGridTextColumn Header="Raw Time" Binding="{Binding RawTime}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="PAX Time" Binding="{Binding PaxTime}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Raw Time" Binding="{Binding RawTime, StringFormat=##0.000}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="PAX Time" Binding="{Binding PaxTime, StringFormat=##0.000}" IsReadOnly="True" Width="*" />
                 <DataGridCheckBoxColumn Header="Ladies" Binding="{Binding IsLadies}" Width="*" />
                 <DataGridCheckBoxColumn Header="Novice" Binding="{Binding IsNovice}" Width="*" />
             </DataGrid.Columns>

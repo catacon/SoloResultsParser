@@ -15,11 +15,11 @@ namespace SoloResultsAnalyzer.Models
         public List<Run> Runs { get; set; }
         public double RawTime { get; set; }
         public double PaxTime { get; set; }
-        public bool IsLadies { get; set; }
-        public bool IsNovice { get; set; }
+        public bool _isLadies;
+        public bool _isNovice;
         private bool _driverExists;
 
-        // NotifyPropertyChanged is used here since DriverExists is used as a flag to update the UI
+        // OnPropertyChanged is used so UI can be updated when these properties are changed
         public bool DriverExists
         {
             get
@@ -30,14 +30,44 @@ namespace SoloResultsAnalyzer.Models
             set
             {
                 _driverExists = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged("DriverExists");
+            }
+        }
+
+        public bool IsLadies
+        {
+            get
+            {
+                return _isLadies;
+            }
+            set
+            {
+                _isLadies = value;
+                OnPropertyChanged("IsLadies");
+            }
+        }
+
+        public bool IsNovice
+        {
+            get
+            {
+                return _isNovice;
+            }
+            set
+            {
+                _isNovice = value;
+                OnPropertyChanged("IsNovice");
             }
         }
 
         // PropertyChanged event for INotifyPeopertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        /// <summary>
+        /// OnPropertyChanged for implementation of INotifyPropertyChanged
+        /// </summary>
+        /// <param name="propertyName">Name of property that has changed</param>
+        public void OnPropertyChanged(string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

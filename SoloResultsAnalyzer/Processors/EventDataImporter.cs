@@ -77,6 +77,7 @@ namespace SoloResultsAnalyzer.Processors
             return _fileParser.ParseEventFile(eventFile, ref _eventResults);
         }
 
+        /*
         private void CheckForExistingDrivers()
         {
             _dbConnection.Open();
@@ -85,40 +86,55 @@ namespace SoloResultsAnalyzer.Processors
             {
                 using (DbCommand driverQueryCommand = CreateDriverCommand(result.FirstName, result.LastName))
                 {
-                    // TODO change to actually get record and get novice and ladies info
+                    var reader = driverQueryCommand.ExecuteReader();
 
-                    int queryResult = (int)driverQueryCommand.ExecuteScalar();
-
-                    if (queryResult > 0)
+                    if (reader.HasRows)
                     {
-                        result.DriverExists = true;
-
+                        while (reader.Read())
+                        {
+                            result.DriverExists = true;
+                            result.IsLadies = (bool)reader["IsLadies"];
+                            result.IsNovice = (bool)reader["IsNovice"];
+                        }
                     }
                 }
             }
 
             _dbConnection.Close();
         }
+        */
 
-        public bool CheckForSingleExistingDriver(string firstName, string lastName)
+        private void CheckForExistingDrivers()
+        {
+            foreach (Models.Result result in _eventResults)
+            {
+                CheckForSingleExistingDriver(result);
+            }
+        }
+
+        public void CheckForSingleExistingDriver(Models.Result result)
         {
             _dbConnection.Open();
 
-            bool driverFound = false;
-
-            using (DbCommand driverQueryCommand = CreateDriverCommand(firstName, lastName))
+            using (DbCommand driverQueryCommand = CreateDriverCommand(result.FirstName, result.LastName))
             {
-                int queryResult = (int)driverQueryCommand.ExecuteScalar();
+                var reader = driverQueryCommand.ExecuteReader();
 
-                if (queryResult > 0)
+                if (reader.HasRows && reader.Read())
                 {
-                    driverFound = true;
+                    result.DriverExists = true;
+                    result.IsLadies = (bool)reader["IsLadies"];
+                    result.IsNovice = (bool)reader["IsNovice"];
+                }
+                else
+                {
+                    result.DriverExists = false;
+                    result.IsLadies = false;
+                    result.IsNovice = false;
                 }
             }
 
             _dbConnection.Close();
-
-            return driverFound;
         }
 
         private void UpdateClassIds()
@@ -228,7 +244,7 @@ namespace SoloResultsAnalyzer.Processors
 
         private DbCommand CreateDriverCommand(string firstName, string lastName)
         {
-            string DriverQuery = "SELECT COUNT(*) FROM Drivers WHERE FirstName = @firstName AND LastName = @lastName";
+            string DriverQuery = "SELECT * FROM Drivers WHERE FirstName = @firstName AND LastName = @lastName";
 
             DbCommand driverQueryCommand = _dbConnection.CreateCommand();
 
