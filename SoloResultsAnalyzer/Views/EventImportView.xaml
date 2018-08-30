@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SoloResultsAnalyzer.Views"
-             xmlns:utilities="clr-namespace:SoloResultsAnalyzer.Utilities">
+             xmlns:utilities="clr-namespace:SoloResultsAnalyzer.Utilities"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
     <UserControl.Resources>
         <utilities:BoolToBrushConverter x:Key="DriverExists" FalseValue="LightPink" TrueValue="Transparent" />
     </UserControl.Resources>
@@ -28,15 +29,20 @@
                   CanUserResizeRows="False"
                   AlternationCount="2" AlternatingRowBackground="AliceBlue"
                   SelectedItem="{Binding SelectedResult}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="CellEditEnding">
+                    <i:InvokeCommandAction Command="{Binding CellChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="*">
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="{Binding DriverExists, Converter={StaticResource DriverExists}}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="*">
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="{Binding DriverExists, Converter={StaticResource DriverExists}}"/>

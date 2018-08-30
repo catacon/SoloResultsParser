@@ -85,12 +85,15 @@ namespace SoloResultsAnalyzer.Processors
                 NewResult.LastName = Fields[4];
                 NewResult.Car = string.Format("{0} {1} {2} {3}", Fields[5], Fields[6], Fields[7].Substring(Fields[7].Length - 1) == "/" ? Fields[7].Substring(0, Fields[7].Length - 1) : Fields[7] + " |", Fields[8]);  // Strip slash if car color was not specified
 
+                int RunNumber = 1;
+
                 // Extract all run data
                 // Each run has a time, penalty, and cones - process each triplet then move to the next triplet
                 for (int field = _ProntoCsvMinFields; field < Fields.Length - 2; field += 3)
                 {
                     Run run = new Run();
 
+                    run.RunNumber = RunNumber++;
                     run.RawTime = double.Parse(Fields[field]);
                     run.Cones = int.Parse(Fields[field + 1]);
 
@@ -117,7 +120,6 @@ namespace SoloResultsAnalyzer.Processors
                     NewResult.Runs.Add(run);
                 }
 
-                NewResult.Runs = NewResult.Runs.OrderBy(x => x.CorrectedTime).ToList();
                 NewResult.RawTime = double.Parse(Fields[9]);
                 NewResult.PaxTime = double.Parse(Fields[10]);
                 Results.Add(NewResult);

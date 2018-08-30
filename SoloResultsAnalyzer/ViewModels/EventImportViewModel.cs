@@ -75,13 +75,20 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        public ICommand CellValueChanged
+        public ICommand CellChangedCommand
         {
             get
             {
                 return new DelegateCommand(o =>
                 {
-                    int x = 0;
+                    if (_dataImporter.CheckForSingleExistingDriver(_selectedResult.FirstName, _selectedResult.LastName))
+                    {
+                        _selectedResult.DriverExists = true;
+                    }
+                    else
+                    {
+                        _selectedResult.DriverExists = false;
+                    }
                 });
             }
         }

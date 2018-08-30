@@ -85,16 +85,40 @@ namespace SoloResultsAnalyzer.Processors
             {
                 using (DbCommand driverQueryCommand = CreateDriverCommand(result.FirstName, result.LastName))
                 {
+                    // TODO change to actually get record and get novice and ladies info
+
                     int queryResult = (int)driverQueryCommand.ExecuteScalar();
 
                     if (queryResult > 0)
                     {
                         result.DriverExists = true;
+
                     }
                 }
             }
 
             _dbConnection.Close();
+        }
+
+        public bool CheckForSingleExistingDriver(string firstName, string lastName)
+        {
+            _dbConnection.Open();
+
+            bool driverFound = false;
+
+            using (DbCommand driverQueryCommand = CreateDriverCommand(firstName, lastName))
+            {
+                int queryResult = (int)driverQueryCommand.ExecuteScalar();
+
+                if (queryResult > 0)
+                {
+                    driverFound = true;
+                }
+            }
+
+            _dbConnection.Close();
+
+            return driverFound;
         }
 
         private void UpdateClassIds()
@@ -162,9 +186,9 @@ namespace SoloResultsAnalyzer.Processors
 
         private DbCommand CreateResultInsertCommand(Models.Result result, int seasonYear, int eventNumber)
         {
-            string ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice,Runs) " +
+            string ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice) " +
                                     "OUTPUT INSERTED.ID " +
-                                    "VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice,@Runs)";
+                                    "VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice)";
 
             DbCommand resultInsertCommand = _dbConnection.CreateCommand();
 
