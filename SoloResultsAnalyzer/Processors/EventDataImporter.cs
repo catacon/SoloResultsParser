@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace SoloResultsAnalyzer.Processors
 {
@@ -19,7 +13,7 @@ namespace SoloResultsAnalyzer.Processors
         private List<Models.Result> _eventResults = new List<Models.Result>();
 
         // Default ID if class is not found
-        readonly int _defaultClassId = 1;
+        private readonly int _defaultClassId = 1;
 
         public List<Models.Result> EventResults
         {
@@ -77,33 +71,6 @@ namespace SoloResultsAnalyzer.Processors
             return _fileParser.ParseEventFile(eventFile, ref _eventResults);
         }
 
-        /*
-        private void CheckForExistingDrivers()
-        {
-            _dbConnection.Open();
-
-            foreach (Models.Result result in _eventResults)
-            {
-                using (DbCommand driverQueryCommand = CreateDriverCommand(result.FirstName, result.LastName))
-                {
-                    var reader = driverQueryCommand.ExecuteReader();
-
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            result.DriverExists = true;
-                            result.IsLadies = (bool)reader["IsLadies"];
-                            result.IsNovice = (bool)reader["IsNovice"];
-                        }
-                    }
-                }
-            }
-
-            _dbConnection.Close();
-        }
-        */
-
         private void CheckForExistingDrivers()
         {
             foreach (Models.Result result in _eventResults)
@@ -116,21 +83,19 @@ namespace SoloResultsAnalyzer.Processors
         {
             _dbConnection.Open();
 
-            using (DbCommand driverQueryCommand = CreateDriverCommand(result.FirstName, result.LastName))
+            using (DbCommand driverQueryCommand = CreateDriverCommand(result.DriverInfo.FirstName, result.DriverInfo.LastName))
             {
                 var reader = driverQueryCommand.ExecuteReader();
 
                 if (reader.HasRows && reader.Read())
                 {
-                    result.DriverExists = true;
-                    result.IsLadies = (bool)reader["IsLadies"];
-                    result.IsNovice = (bool)reader["IsNovice"];
+                    result.DriverInfo.DriverExists = true;
+                    result.DriverInfo.IsLadies = (bool)reader["IsLadies"];
+                    result.DriverInfo.IsNovice = (bool)reader["IsNovice"];
                 }
                 else
                 {
-                    result.DriverExists = false;
-                    result.IsLadies = false;
-                    result.IsNovice = false;
+                    result.DriverInfo.DriverExists = false;
                 }
             }
 
@@ -147,8 +112,16 @@ namespace SoloResultsAnalyzer.Processors
                 string classString = currentResult.ClassString.Substring(currentResult.ClassString.Length - 1) == "L" ? currentResult.ClassString.Substring(0, currentResult.ClassString.Length - 1) : currentResult.ClassString;
 
                 using (DbCommand command = CreateClassCommand(classString))
-                { 
-                    currentResult.ClassId = (int)command.ExecuteScalar();
+                {
+                    try
+                    {
+                        currentResult.ClassId = (int)command.ExecuteScalar();
+                    }
+                    catch(Exception)
+                    {
+                        // TODO log
+                        currentResult.ClassId = _defaultClassId;
+                    }
                 }
             }
 
@@ -162,37 +135,11 @@ namespace SoloResultsAnalyzer.Processors
 
             foreach (Models.Result currentResult in _eventResults)
             {
-                int resultId = 0;
+                int resultId = InsertResult(currentResult, seasonYear, eventNumber);
 
-                // Insert result into database                  
-                using (DbCommand resultInsertCommand = CreateResultInsertCommand(currentResult, seasonYear, eventNumber))
-                {
-                    // Execute insert command
-                    resultId = (int)resultInsertCommand.ExecuteScalar();
+                InsertRuns(currentResult.Runs, resultId);
 
-                    // Check Error
-                    if (resultId < 0)
-                    {
-                        Console.WriteLine("Error inserting result data into Database!");
-                        // TODO handle error
-                    }
-                }
-
-                // Store each run and associate it with the result
-                foreach (Models.Run currentRun in currentResult.Runs)
-                {
-                    using (DbCommand runInsertCommand = CreateRunInsertCommand(currentRun, resultId))
-                    {
-                        int result = runInsertCommand.ExecuteNonQuery();
-
-                        // Check Error
-                        if (result < 0)
-                        {
-                            Console.WriteLine("Error inserting run data into Database!");
-                            // TODO handle error
-                        }
-                    }
-                }
+                InsertDriver(currentResult.DriverInfo);
             }
 
             _dbConnection.Close();
@@ -200,38 +147,90 @@ namespace SoloResultsAnalyzer.Processors
             return true;
         }
 
+        private int InsertResult(Models.Result result, int seasonYear, int eventNumber)
+        {
+            int resultId = 0;
+
+            // Insert result into database                  
+            using (DbCommand resultInsertCommand = CreateResultInsertCommand(result, seasonYear, eventNumber))
+            {
+                // Execute insert command
+                resultId = (int)resultInsertCommand.ExecuteScalar();
+
+                if (resultId < 0)
+                {
+                    Console.WriteLine("Error inserting result data into Database!");
+                    // TODO handle error
+                }
+            }
+
+            return resultId;
+        }
+
+        private void InsertDriver(Models.Driver driver)
+        {
+            // Insert driver if they do not exist
+            if (!driver.DriverExists)
+            {
+                using (DbCommand driverInsertCommand = CreateDriverInsertCommand(driver))
+                {
+                    int result = driverInsertCommand.ExecuteNonQuery();
+
+                    if (result < 0)
+                    {
+                        Console.WriteLine("Error inserting run data into Database!");
+                        // TODO handle error
+                    }
+                }
+            }
+        }
+
+        private void InsertRuns(List<Models.Run> runs, int resultId)
+        {
+            // Store each run and associate it with the result
+            foreach (Models.Run run in runs)
+            {
+                using (DbCommand runInsertCommand = CreateRunInsertCommand(run, resultId))
+                {
+                    int result = runInsertCommand.ExecuteNonQuery();
+
+                    if (result < 0)
+                    {
+                        Console.WriteLine("Error inserting run data into Database!");
+                        // TODO handle error
+                    }
+                }
+            }
+        }
+
         private DbCommand CreateResultInsertCommand(Models.Result result, int seasonYear, int eventNumber)
         {
-            string ResultInsertQuery = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice) " +
+            DbCommand resultInsertCommand = _dbConnection.CreateCommand();
+
+            resultInsertCommand.CommandText = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice) " +
                                     "OUTPUT INSERTED.ID " +
                                     "VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice)";
 
-            DbCommand resultInsertCommand = _dbConnection.CreateCommand();
-
-            resultInsertCommand.CommandText = ResultInsertQuery;
-
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Season", seasonYear);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Event", eventNumber);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@FirstName", result.FirstName);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@LastName", result.LastName);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@FirstName", result.DriverInfo.FirstName);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@LastName", result.DriverInfo.LastName);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Car", result.Car);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Class", result.ClassId);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Number", result.ClassNumber);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@RawTime", result.RawTime);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@PaxTime", result.PaxTime);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsLadies", result.IsLadies ? 1 : 0);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsNovice", result.IsNovice ? 1 : 0);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsLadies", result.DriverInfo.IsLadies ? 1 : 0);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsNovice", result.DriverInfo.IsNovice ? 1 : 0);
 
             return resultInsertCommand;
         }
 
         private DbCommand CreateRunInsertCommand(Models.Run run, int resultId)
         {
-            string RunInsertQuery = "INSERT INTO Runs (RunNumber,RawTime,Cones,Penalty,ResultId) VALUES (@RunNumber,@RawTime,@Cones,@Penalty,@ResultId)";
-
             DbCommand runInsertCommand = _dbConnection.CreateCommand();
 
-            runInsertCommand.CommandText = RunInsertQuery;
+            runInsertCommand.CommandText = "INSERT INTO Runs (RunNumber,RawTime,Cones,Penalty,ResultId) VALUES (@RunNumber,@RawTime,@Cones,@Penalty,@ResultId)";
 
             Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@RunNumber", run.RunNumber);
             Utilities.Extensions.AddParamWithValue(ref runInsertCommand, "@RawTime", run.RawTime);
@@ -242,13 +241,12 @@ namespace SoloResultsAnalyzer.Processors
             return runInsertCommand;
         }
 
+        // TODO rename
         private DbCommand CreateDriverCommand(string firstName, string lastName)
         {
-            string DriverQuery = "SELECT * FROM Drivers WHERE FirstName = @firstName AND LastName = @lastName";
-
             DbCommand driverQueryCommand = _dbConnection.CreateCommand();
 
-            driverQueryCommand.CommandText = DriverQuery;
+            driverQueryCommand.CommandText = "SELECT * FROM Drivers WHERE FirstName = @firstName AND LastName = @lastName";
 
             Utilities.Extensions.AddParamWithValue(ref driverQueryCommand, "firstName", firstName);
             Utilities.Extensions.AddParamWithValue(ref driverQueryCommand, "lastName", lastName);
@@ -258,15 +256,27 @@ namespace SoloResultsAnalyzer.Processors
 
         private DbCommand CreateClassCommand(string classString)
         {
-            string ClassIdQuery = "SELECT Id FROM Classes WHERE Abbreviation = @classString";
-
             DbCommand classQueryCommand = _dbConnection.CreateCommand();
 
             Utilities.Extensions.AddParamWithValue(ref classQueryCommand, "classString", classString);
 
-            classQueryCommand.CommandText = ClassIdQuery;
+            classQueryCommand.CommandText = "SELECT Id FROM Classes WHERE Abbreviation = @classString";
 
             return classQueryCommand;
+        }
+
+        private DbCommand CreateDriverInsertCommand(Models.Driver driverInfo)
+        { 
+            DbCommand driverInsertQuery = _dbConnection.CreateCommand();
+
+            driverInsertQuery.CommandText = "INSERT INTO Drivers (FirstName, LastName, IsLadies, IsNovice) VALUES (@FirstName, @LastName, @IsLadies, @IsNovice)"; ;
+
+            Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "FirstName", driverInfo.FirstName);
+            Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "LastName", driverInfo.LastName);
+            Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "IsLadies", driverInfo.IsLadies);
+            Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "IsNovice", driverInfo.IsNovice);
+
+            return driverInsertQuery;
         }
     }
 }

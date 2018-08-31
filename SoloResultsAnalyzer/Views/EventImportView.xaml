@@ -31,21 +31,21 @@
                   SelectedItem="{Binding SelectedResult}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="CellEditEnding">
-                    <i:InvokeCommandAction Command="{Binding CellChangedCommand}"/>
+                    <i:InvokeCommandAction Command="{Binding NameChangedCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Width="*">
+                <DataGridTextColumn Header="First Name" Binding="{Binding DriverInfo.FirstName, UpdateSourceTrigger=PropertyChanged}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="{Binding DriverExists, Converter={StaticResource DriverExists}}"/>
+                            <Setter Property="Background" Value="{Binding DriverInfo.DriverExists, Converter={StaticResource DriverExists}}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Width="*">
+                <DataGridTextColumn Header="Last Name" Binding="{Binding DriverInfo.LastName, UpdateSourceTrigger=PropertyChanged}" Width="*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Background" Value="{Binding DriverExists, Converter={StaticResource DriverExists}}"/>
+                            <Setter Property="Background" Value="{Binding DriverInfo.DriverExists, Converter={StaticResource DriverExists}}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -60,8 +60,8 @@
                 <DataGridTextColumn Header="Car" Binding="{Binding Car}" IsReadOnly="True" Width="3*" />
                 <DataGridTextColumn Header="Raw Time" Binding="{Binding RawTime, StringFormat=##0.000}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="PAX Time" Binding="{Binding PaxTime, StringFormat=##0.000}" IsReadOnly="True" Width="*" />
-                <DataGridCheckBoxColumn Header="Ladies" Binding="{Binding IsLadies}" Width="*" />
-                <DataGridCheckBoxColumn Header="Novice" Binding="{Binding IsNovice}" Width="*" />
+                <DataGridCheckBoxColumn Header="Ladies" Binding="{Binding DriverInfo.IsLadies, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                <DataGridCheckBoxColumn Header="Novice" Binding="{Binding DriverInfo.IsNovice, UpdateSourceTrigger=PropertyChanged}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

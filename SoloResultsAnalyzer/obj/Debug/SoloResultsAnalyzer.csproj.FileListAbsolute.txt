@@ -104,3 +104,7 @@ C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\Ev
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\HomeView.baml
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\NewSeasonView.baml
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignColors.dll
+C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.xml

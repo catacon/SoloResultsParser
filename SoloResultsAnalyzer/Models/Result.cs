@@ -6,8 +6,6 @@ namespace SoloResultsAnalyzer.Models
 {
     public class Result : INotifyPropertyChanged
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
         public string Car { get; set; }
         public string ClassString { get; set; }
         public int ClassId { get; set; }
@@ -15,49 +13,12 @@ namespace SoloResultsAnalyzer.Models
         public List<Run> Runs { get; set; }
         public double RawTime { get; set; }
         public double PaxTime { get; set; }
-        public bool _isLadies;
-        public bool _isNovice;
-        private bool _driverExists;
+        public Driver DriverInfo { get; set; }
 
-        // OnPropertyChanged is used so UI can be updated when these properties are changed
-        public bool DriverExists
+        public Result()
         {
-            get
-            {
-                return _driverExists;
-            }
-
-            set
-            {
-                _driverExists = value;
-                OnPropertyChanged("DriverExists");
-            }
-        }
-
-        public bool IsLadies
-        {
-            get
-            {
-                return _isLadies;
-            }
-            set
-            {
-                _isLadies = value;
-                OnPropertyChanged("IsLadies");
-            }
-        }
-
-        public bool IsNovice
-        {
-            get
-            {
-                return _isNovice;
-            }
-            set
-            {
-                _isNovice = value;
-                OnPropertyChanged("IsNovice");
-            }
+            Runs = new List<Run>();
+            DriverInfo = new Driver();
         }
 
         // PropertyChanged event for INotifyPeopertyChanged implementation
@@ -70,11 +31,6 @@ namespace SoloResultsAnalyzer.Models
         public void OnPropertyChanged(string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public Result()
-        {
-            Runs = new List<Run>();
         }
     }
 }

@@ -81,8 +81,8 @@ namespace SoloResultsAnalyzer.Processors
 
                 NewResult.ClassString = Fields[1];
                 NewResult.ClassNumber = int.Parse(Fields[2]);
-                NewResult.FirstName = Fields[3];
-                NewResult.LastName = Fields[4];
+                NewResult.DriverInfo.FirstName = Fields[3];
+                NewResult.DriverInfo.LastName = Fields[4];
                 NewResult.Car = string.Format("{0} {1} {2} {3}", Fields[5], Fields[6], Fields[7].Substring(Fields[7].Length - 1) == "/" ? Fields[7].Substring(0, Fields[7].Length - 1) : Fields[7] + " |", Fields[8]);  // Strip slash if car color was not specified
 
                 int RunNumber = 1;

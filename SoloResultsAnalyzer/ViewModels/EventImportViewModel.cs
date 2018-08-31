@@ -23,7 +23,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private int _eventNumber;
 
-        private Result _selectedResult;
+        public Result SelectedResult { get; set; }
 
         public List<Result> EventResults
         {
@@ -35,19 +35,6 @@ namespace SoloResultsAnalyzer.ViewModels
             set
             {
                 _dataImporter.EventResults = value;
-            }
-        }
-
-        public Result SelectedResult
-        {
-            get
-            {
-                return _selectedResult;
-            }
-            
-            set
-            {
-                _selectedResult = value;
             }
         }
 
@@ -75,13 +62,13 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        public ICommand CellChangedCommand
+        public ICommand NameChangedCommand
         {
             get
             {
                 return new DelegateCommand(o =>
                 {
-                    _dataImporter.CheckForSingleExistingDriver(_selectedResult);
+                    _dataImporter.CheckForSingleExistingDriver(SelectedResult);
                 });
             }
         }

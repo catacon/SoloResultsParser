@@ -98,15 +98,15 @@ namespace SoloResultsAnalyzer
                 {
                     command.Parameters.AddWithValue("@Season", Season);
                     command.Parameters.AddWithValue("@Event", Event);
-                    command.Parameters.AddWithValue("@FirstName", currentResult.FirstName);
-                    command.Parameters.AddWithValue("@LastName", currentResult.LastName);
+                    command.Parameters.AddWithValue("@FirstName", currentResult.DriverInfo.FirstName);
+                    command.Parameters.AddWithValue("@LastName", currentResult.DriverInfo.LastName);
                     command.Parameters.AddWithValue("@Car", currentResult.Car);
                     command.Parameters.AddWithValue("@Class", currentResult.ClassId);
                     command.Parameters.AddWithValue("@Number", currentResult.ClassNumber);
                     command.Parameters.AddWithValue("@RawTime", currentResult.RawTime);
                     command.Parameters.AddWithValue("@PaxTime", currentResult.PaxTime);
-                    command.Parameters.AddWithValue("@Ladies", currentResult.IsLadies ? 1 : 0);
-                    command.Parameters.AddWithValue("@Novice", currentResult.IsNovice ? 1 : 0);
+                    command.Parameters.AddWithValue("@Ladies", currentResult.DriverInfo.IsLadies ? 1 : 0);
+                    command.Parameters.AddWithValue("@Novice", currentResult.DriverInfo.IsNovice ? 1 : 0);
 
                     // Execute insert command
                     int result = command.ExecuteNonQuery();
@@ -127,16 +127,16 @@ namespace SoloResultsAnalyzer
                         command.Parameters.AddWithValue("@Season", Season);
                         command.Parameters.AddWithValue("@Event", Event);
                         command.Parameters.AddWithValue("@RunNumber", iRun + 1);
-                        command.Parameters.AddWithValue("@FirstName", currentResult.FirstName);
-                        command.Parameters.AddWithValue("@LastName", currentResult.LastName);
+                        command.Parameters.AddWithValue("@FirstName", currentResult.DriverInfo.FirstName);
+                        command.Parameters.AddWithValue("@LastName", currentResult.DriverInfo.LastName);
                         command.Parameters.AddWithValue("@Car", currentResult.Car);
                         command.Parameters.AddWithValue("@Class", currentResult.ClassId);
                         command.Parameters.AddWithValue("@Number", currentResult.ClassNumber);
                         command.Parameters.AddWithValue("@RawTime", currentResult.Runs[iRun].RawTime);
                         command.Parameters.AddWithValue("@Cones", currentResult.Runs[iRun].Cones);
                         command.Parameters.AddWithValue("@Penalty", (int)currentResult.Runs[iRun].Penalty);
-                        command.Parameters.AddWithValue("@Ladies", currentResult.IsLadies ? 1 : 0);
-                        command.Parameters.AddWithValue("@Novice", currentResult.IsNovice ? 1 : 0);
+                        command.Parameters.AddWithValue("@Ladies", currentResult.DriverInfo.IsLadies ? 1 : 0);
+                        command.Parameters.AddWithValue("@Novice", currentResult.DriverInfo.IsNovice ? 1 : 0);
 
                         // Execute insert command
                         int result = command.ExecuteNonQuery();
