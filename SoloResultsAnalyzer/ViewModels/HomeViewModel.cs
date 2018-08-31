@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,12 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
+        public ObservableCollection<Models.Event> Events { get; } = new ObservableCollection<Models.Event>();
 
         public HomeViewModel(string pageTitle, int seasonYear) : base(pageTitle)
         {
             SeasonYear = seasonYear;
+            Events.Add(new Models.Event() { EventNumber = 1, Date = DateTime.Now, Location = "Family Arena" });
         }
 
         public int SeasonYear { get; }

@@ -6,6 +6,11 @@
              xmlns:local="clr-namespace:SoloResultsAnalyzer.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="listHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -30,16 +35,21 @@
 
         <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
             <Label Content="{Binding SeasonYear, FallbackValue=2000}" ContentStringFormat=" {0} Season" FontSize="36"/>
-            <Label Content="Event 1" />
-            <Label Content="Event 2" />
-            <Label Content="Event 3" />
-            <Label Content="Event 4" />
-            <Label Content="Event 5" />
-            <Label Content="Event 6" />
-            <Label Content="Event 7" />
-            <Label Content="Event 8" />
-            <Label Content="Event 9" />
-            <Label Content="Event 10" />
+            <ListView ItemsSource="{Binding Events}" Background="Transparent" BorderThickness="0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Focusable" Value="false"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource listHeaderStyle}">
+                        <GridViewColumn Header="Event Number" DisplayMemberBinding="{Binding EventNumber, StringFormat=Event {0}}" />
+                        <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date, StringFormat=D}" />
+                        <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" />
+                    </GridView>
+                </ListView.View>
+                
+            </ListView>
         </WrapPanel>
         
     </Grid>

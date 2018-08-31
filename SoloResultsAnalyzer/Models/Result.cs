@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace SoloResultsAnalyzer.Models 
 {
-    public class Result : INotifyPropertyChanged
+    public class Result
     {
         public string Car { get; set; }
         public string ClassString { get; set; }
@@ -19,18 +19,6 @@ namespace SoloResultsAnalyzer.Models
         {
             Runs = new List<Run>();
             DriverInfo = new Driver();
-        }
-
-        // PropertyChanged event for INotifyPeopertyChanged implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// OnPropertyChanged for implementation of INotifyPropertyChanged
-        /// </summary>
-        /// <param name="propertyName">Name of property that has changed</param>
-        public void OnPropertyChanged(string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

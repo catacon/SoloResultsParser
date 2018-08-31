@@ -93,8 +93,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Driver.cs" />
+    <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Run.cs" />
+    <Compile Include="Processors\EventCreator.cs" />
     <Compile Include="Processors\EventDataImporter.cs" />
     <Compile Include="Processors\ProntoFileParser.cs" />
     <Compile Include="Processors\IFileParser.cs" />
