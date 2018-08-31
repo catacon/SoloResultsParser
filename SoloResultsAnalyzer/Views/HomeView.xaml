@@ -24,6 +24,7 @@
             <Button Content="Import Runs" Command="{Binding Import}" Margin="20" Padding="5" />
             <Button Content="Create Event Reports" Command="{Binding EventReport}" Margin="20" Padding="5" />
             <Button Content="Update Championships" Command="{Binding ChampionshipReport}" Margin="20" Padding="5" />
+            <Button Content="View Drivers" Command="{Binding ViewDrivers}" Margin="20" Padding="5" />
             <Button Content="New Season" Command="{Binding NewSeason}" Margin="20" Padding="5" />
         </WrapPanel>
 

@@ -104,6 +104,7 @@
     <Compile Include="Utilities\Settings.cs" />
     <Compile Include="Utilities\ValueConverters.cs" />
     <Compile Include="ViewModels\ChampionshipReportViewModel.cs" />
+    <Compile Include="ViewModels\DriversViewModel.cs" />
     <Compile Include="ViewModels\EventImportViewModel.cs" />
     <Compile Include="ViewModels\EventReportViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
@@ -111,6 +112,9 @@
     <Compile Include="ViewModels\NewSeasonViewModel.cs" />
     <Compile Include="Views\ChampionshipReportView.xaml.cs">
       <DependentUpon>ChampionshipReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DriversView.xaml.cs">
+      <DependentUpon>DriversView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EventImportView.xaml.cs">
       <DependentUpon>EventImportView.xaml</DependentUpon>
@@ -139,6 +143,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ChampionshipReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DriversView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -108,3 +108,5 @@ C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\Material
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.dll
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.pdb
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.xml
+C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\DriversView.g.cs
+C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\DriversView.baml

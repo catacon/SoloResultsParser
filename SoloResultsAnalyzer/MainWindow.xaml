@@ -19,47 +19,13 @@
                 <DataTemplate DataType="{x:Type VM:ChampionshipReportViewModel}">
                     <View:ChampionshipReportView />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type VM:DriversViewModel}">
+                    <View:DriversView />
+                </DataTemplate>
                 <DataTemplate DataType="{x:Type VM:NewSeasonViewModel}">
                     <View:NewSeasonView />
                 </DataTemplate>
             </ContentPresenter.Resources>
         </ContentPresenter>
-
-
     </Grid>
-    <!--
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-
-        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0">
-            <Label Content="STL Solo Results Analyzer" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <Label Content="{Binding Path=CurrentSeason}" ContentStringFormat=" {0} Season"  HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </StackPanel>
-
-        <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Vertical" Margin="5">
-            <Label Content="Event"  HorizontalAlignment="Center"/>
-            <ComboBox />
-        </StackPanel>
-
-        <UniformGrid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2">
-            <Button Content="Import Runs" Command="{Binding UpdateRuns}" Margin="5" />
-            <Button Content="Create Event Reports" Command="{Binding GenerateEventReports}" Margin="5" />
-            <Button Content="Update Championships" Command="{Binding UpdateChampionshipReports}" Margin="5" />
-            <Button Content="Load Database" Command="{Binding LoadDatabase}" Margin="5" />
-            <Button Content="Update Classes" Command="{Binding UpdateClasses}" Margin="5" />
-            <Button Content="New Season" Command="{Binding NewSeason}" Margin="5" />
-
-        </UniformGrid>
-        -->
 </Window>

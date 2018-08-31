@@ -9,24 +9,14 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        private int _seasonYear;
 
         public HomeViewModel(string pageTitle, int seasonYear) : base(pageTitle)
         {
-            _seasonYear = seasonYear;
+            SeasonYear = seasonYear;
         }
 
-        public int SeasonYear
-        {
-            get
-            {
-                return _seasonYear;
-            }
-        } 
+        public int SeasonYear { get; }
 
-        /// <summary>
-        /// Command for navigating to event data import view
-        /// </summary>
         public ICommand Import
         {
             get
@@ -35,9 +25,6 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        /// <summary>
-        /// Command for navigating to event report view
-        /// </summary>
         public ICommand EventReport
         {
             get
@@ -46,9 +33,6 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        /// <summary>
-        /// Command for navigating to championship report view
-        /// </summary>
         public ICommand ChampionshipReport
         {
             get
@@ -57,9 +41,14 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        /// <summary>
-        /// Command for navigating to new season view
-        /// </summary>
+        public ICommand ViewDrivers
+        {
+            get
+            {
+                return SetNextViewModel("DriversViewModel");
+            }
+        }
+
         public ICommand NewSeason
         {
             get

@@ -14,6 +14,7 @@ namespace SoloResultsAnalyzer.Models
         public bool _isLadies;
         public bool _isNovice;
         public bool _driverExists;
+        public int Id { get; set; }
 
         public string FirstName
         {
