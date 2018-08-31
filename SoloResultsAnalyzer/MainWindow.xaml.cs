@@ -32,7 +32,10 @@ namespace SoloResultsAnalyzer
         // Event data file parser
         private Processors.IFileParser _fileParser = new Processors.ProntoFileParser();
 
-        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+        private Processors.EventCreator _eventCreator;
+
+        //private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
 
         // Database connection for event data
         private DbConnection _dbConnection;
@@ -47,8 +50,10 @@ namespace SoloResultsAnalyzer
 
             _dbConnection = new SqlConnection(_dbConnectionString);
 
+            _eventCreator = new Processors.EventCreator(_dbConnection);
+
             // Initialize view models
-            _homeViewModel = new HomeViewModel("Home", _seasonYear);
+            _homeViewModel = new HomeViewModel("Home", _seasonYear, _eventCreator);
             _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _seasonYear, _eventNumber);
             _eventReportViewModel = new EventReportViewModel("Create Event Reports");
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
@@ -57,6 +62,7 @@ namespace SoloResultsAnalyzer
 
             // Set initial view model
             CurrentViewModel = _homeViewModel;
+            CurrentViewModel.Update();
 
             // Subscribe to PropertyChanged event for all view models
             _homeViewModel.PropertyChanged += _viewModel_PropertyChanged;
@@ -107,8 +113,7 @@ namespace SoloResultsAnalyzer
                         CurrentViewModel = _championshipReportViewModel;
                         break;
                     case "DriversViewModel":
-                        CurrentViewModel = new DriversViewModel("View Drivers", _dbConnection);
-                        CurrentViewModel.PropertyChanged += _viewModel_PropertyChanged;
+                        CurrentViewModel = _driversViewModel;
                         break;
                     case "NewSeasonViewModel":
                         CurrentViewModel = _newSeasonViewModel;
@@ -117,6 +122,8 @@ namespace SoloResultsAnalyzer
                         // Do nothing
                         break;
                 }
+
+                CurrentViewModel.Update();
 
                 // Tell the view to update
                 OnPropertyChanged("CurrentViewModel");

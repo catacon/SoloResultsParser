@@ -39,6 +39,11 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
+        public virtual void Update()
+        {
+
+        }
+
         /// <summary>
         /// OnPropertyChanged for implementation of INotifyPropertyChanged
         /// </summary>

@@ -18,8 +18,8 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
@@ -33,18 +33,27 @@
             <Button Content="New Season" Command="{Binding NewSeason}" Margin="20" Padding="5" />
         </WrapPanel>
 
-        <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Stretch">
             <Label Content="{Binding SeasonYear, FallbackValue=2000}" ContentStringFormat=" {0} Season" FontSize="36"/>
-            <ListView ItemsSource="{Binding Events}" Background="Transparent" BorderThickness="0">
+            <ListView ItemsSource="{Binding Events}" Background="Transparent" BorderThickness="0" Foreground="Black">
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Focusable" Value="false"/>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border BorderBrush="Transparent" BorderThickness="0" Background="{TemplateBinding Background}">
+                                        <GridViewRowPresenter HorizontalAlignment="Stretch" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Width="Auto" Margin="0" Content="{TemplateBinding Content}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView ColumnHeaderContainerStyle="{StaticResource listHeaderStyle}">
                         <GridViewColumn Header="Event Number" DisplayMemberBinding="{Binding EventNumber, StringFormat=Event {0}}" />
-                        <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date, StringFormat=D}" />
+                        <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date, StringFormat=D}"  />
                         <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" />
                     </GridView>
                 </ListView.View>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +11,14 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
+        private Processors.EventCreator _eventCreator;
+
         public ObservableCollection<Models.Event> Events { get; } = new ObservableCollection<Models.Event>();
 
-        public HomeViewModel(string pageTitle, int seasonYear) : base(pageTitle)
+        public HomeViewModel(string pageTitle, int seasonYear, Processors.EventCreator eventCreator) : base(pageTitle)
         {
+            _eventCreator = eventCreator;
             SeasonYear = seasonYear;
-            Events.Add(new Models.Event() { EventNumber = 1, Date = DateTime.Now, Location = "Family Arena" });
         }
 
         public int SeasonYear { get; }
@@ -59,5 +62,19 @@ namespace SoloResultsAnalyzer.ViewModels
                 return SetNextViewModel("NewSeasonViewModel");
             }
         }
+
+        public override void Update()
+        {
+            var newEvents = _eventCreator.GetEvents();
+
+            Events.Clear();
+
+            foreach (Models.Event ev in newEvents)
+            {
+                Events.Add(ev);
+            }
+        }
+
+
     }
 }

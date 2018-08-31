@@ -20,8 +20,6 @@ namespace SoloResultsAnalyzer.ViewModels
         public DriversViewModel(string pageTitle, DbConnection dbConnection) : base(pageTitle)
         {
             _dbConnection = dbConnection;
-
-            GetDrivers();
         }
 
         public ICommand Save
@@ -35,6 +33,11 @@ namespace SoloResultsAnalyzer.ViewModels
                     // TODO indicate save went OK
                 });
             }
+        }
+
+        public override void Update()
+        {
+            GetDrivers();
         }
 
         private void GetDrivers()

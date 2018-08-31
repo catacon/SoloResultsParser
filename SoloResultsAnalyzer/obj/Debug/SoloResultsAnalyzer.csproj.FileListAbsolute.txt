@@ -110,3 +110,10 @@ C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\Material
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.xml
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\DriversView.g.cs
 C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\DriversView.baml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignColors.dll
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.dll
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\System.Windows.Interactivity.dll
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.pdb
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\bin\Debug\MaterialDesignThemes.Wpf.xml
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\DriversView.g.cs
+F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\Views\DriversView.baml
