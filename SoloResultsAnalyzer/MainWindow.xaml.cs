@@ -58,7 +58,7 @@ namespace SoloResultsAnalyzer
             _eventReportViewModel = new EventReportViewModel("Create Event Reports");
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
             _driversViewModel = new DriversViewModel("View Drivers", _dbConnection);
-            _newSeasonViewModel = new NewSeasonViewModel("Start New Season");
+            _newSeasonViewModel = new NewSeasonViewModel("Start New Season", _eventCreator);
 
             // Set initial view model
             CurrentViewModel = _homeViewModel;

@@ -7,6 +7,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Vertical">
+            <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" Margin="20" Padding="5" />
+            <Button Width="50" Height="50"  Content="Save" Command="{Binding Save}" Margin="20" Padding="5" />
+            <Button Width="50" Height="50"  Content="New Season" Command="{Binding NewSeason}" Margin="20" Padding="5" />
+        </WrapPanel>
+        <DataGrid Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=Events, IsAsync=True}" 
+                  AutoGenerateColumns="True"
+                  SelectionMode="Single" CanUserDeleteRows="True" CanUserAddRows="True"
+                  CanUserResizeRows="False"
+                  AlternationCount="2" AlternatingRowBackground="AliceBlue"
+                  SelectedItem="{Binding SelectedEvent}">
+        </DataGrid>
     </Grid>
 </UserControl>
