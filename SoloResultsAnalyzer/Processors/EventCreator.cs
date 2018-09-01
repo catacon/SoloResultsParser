@@ -13,97 +13,43 @@ namespace SoloResultsAnalyzer.Processors
     {
         private DbConnection _dbConnection;
 
-        private SqlDataAdapter _adapter = new SqlDataAdapter();
+        private DbDataAdapter _adapter;
 
         public EventCreator(DbConnection dbConnection)
         {
             _dbConnection = dbConnection;
+
+            InitializeAdapter();
         }
 
-        public List<Models.Event> GetEvents()
+        private void InitializeAdapter()
         {
-            _dbConnection.Open();
+            var factory = DbProviderFactories.GetFactory(_dbConnection);
+            _adapter = factory.CreateDataAdapter();
+            var builder = factory.CreateCommandBuilder();
+            builder.DataAdapter = _adapter;
 
-            List<Models.Event> events = new List<Models.Event>();
+            var selectCommand = factory.CreateCommand();
+            selectCommand.CommandText = "SELECT * FROM Events";
+            selectCommand.Connection = _dbConnection;
 
-            using (DbCommand command = _dbConnection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM Events";
-
-                var reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Models.Event driver = new Models.Event();
-                    driver.EventNumber = (int)reader["EventNumber"];
-                    driver.Location = (string)reader["Location"];
-                    driver.Date = (DateTime)reader["Date"];
-                    driver.Id = (int)reader["Id"];
-
-                    events.Add(driver);
-                }
-            }
-
-            _dbConnection.Close();
-
-            return events;
+            _adapter.SelectCommand = selectCommand;
+            _adapter.InsertCommand = builder.GetInsertCommand();
+            _adapter.UpdateCommand = builder.GetUpdateCommand();
+            _adapter.DeleteCommand = builder.GetDeleteCommand();
         }
 
-        public void GetEventDataTable()
+        public DataTable GetEventDataTable()
         {
-            _dbConnection.Open();
+            DataTable table = new DataTable();
+            _adapter.Fill(table);
 
-            using (DbCommand command = _dbConnection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM Events";
-
-                var factory = DbProviderFactories.GetFactory(_dbConnection);
-                var adapter = factory.CreateDataAdapter();
-
-                //adapter.
-
-                //while (reader.Read())
-                //{
-                //    Models.Event driver = new Models.Event();
-                //    driver.EventNumber = (int)reader["EventNumber"];
-                //    driver.Location = (string)reader["Location"];
-                //    driver.Date = (DateTime)reader["Date"];
-                //    driver.Id = (int)reader["Id"];
-
-                //    events.Add(driver);
-                //}
-            }
-
-            
-
-            _dbConnection.Close();
+            return table;
         }
 
-        public void SaveEvents(IEnumerable<Models.Event> events)
+        public void Update(DataTable table)
         {
-            _dbConnection.Open();
-
-            DbCommand command = _dbConnection.CreateCommand();
-
-            foreach (Models.Event ev in events)
-            {
-                command.CommandText = "UPDATE Events SET EventNumber = @EventNumber, Date = @Date, Location = @Location, Id = @Id";
-
-                Utilities.Extensions.AddParamWithValue(ref command, "EventNumber", ev.EventNumber);
-                Utilities.Extensions.AddParamWithValue(ref command, "Date", ev.Date);
-                Utilities.Extensions.AddParamWithValue(ref command, "Location", ev.Location);
-                Utilities.Extensions.AddParamWithValue(ref command, "Id", ev.Id);
-
-                int result = command.ExecuteNonQuery();
-
-                if (result < 0)
-                {
-                    Console.WriteLine("Error inserting result data into Database!");
-                }
-
-            }
-
-            _dbConnection.Close();
+            _adapter.Update(table);
         }
     }
 }

@@ -34,8 +34,8 @@ namespace SoloResultsAnalyzer
 
         private Processors.EventCreator _eventCreator;
 
-        //private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
-        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+        //private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
 
         // Database connection for event data
         private DbConnection _dbConnection;

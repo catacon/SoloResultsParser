@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     class NewSeasonViewModel : ViewModelBase
     {
-        public ObservableCollection<Models.Event> Events { get; } = new ObservableCollection<Models.Event>();
+        public DataTable Events { get; set; }
 
         private Processors.EventCreator _eventCreator;
 
@@ -21,14 +22,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         public override void Update()
         {
-            var newEvents = _eventCreator.GetEvents();
-
-            Events.Clear();
-
-            foreach (Models.Event ev in newEvents)
-            {
-                Events.Add(ev);
-            }
+            Events = _eventCreator.GetEventDataTable();
         }
 
         public ICommand Save
@@ -37,7 +31,7 @@ namespace SoloResultsAnalyzer.ViewModels
             {
                 return new DelegateCommand(o =>
                 {
-                    _eventCreator.SaveEvents(Events);
+                    _eventCreator.Update(Events);
                 });
             }
         }
