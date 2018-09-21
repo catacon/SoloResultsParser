@@ -96,7 +96,7 @@
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Run.cs" />
-    <Compile Include="Processors\EventCreator.cs" />
+    <Compile Include="Processors\EventAdapter.cs" />
     <Compile Include="Processors\EventDataImporter.cs" />
     <Compile Include="Processors\ProntoFileParser.cs" />
     <Compile Include="Processors\IFileParser.cs" />
@@ -110,8 +110,9 @@
     <Compile Include="ViewModels\EventImportViewModel.cs" />
     <Compile Include="ViewModels\EventReportViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\NewSeasonViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\EditSeasonViewModel.cs" />
     <Compile Include="Views\ChampionshipReportView.xaml.cs">
       <DependentUpon>ChampionshipReportView.xaml</DependentUpon>
     </Compile>
@@ -127,8 +128,8 @@
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewSeasonView.xaml.cs">
-      <DependentUpon>NewSeasonView.xaml</DependentUpon>
+    <Compile Include="Views\EditSeasonView.xaml.cs">
+      <DependentUpon>EditSeasonView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -164,7 +165,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NewSeasonView.xaml">
+    <Page Include="Views\EditSeasonView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

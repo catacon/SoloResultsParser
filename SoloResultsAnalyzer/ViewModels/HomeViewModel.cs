@@ -12,11 +12,11 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        private Processors.EventCreator _eventCreator;
+        private Processors.EventAdapter _eventCreator;
 
         public DataTable Events { get; set; }
 
-        public HomeViewModel(string pageTitle, int seasonYear, Processors.EventCreator eventCreator) : base(pageTitle)
+        public HomeViewModel(string pageTitle, int seasonYear, Processors.EventAdapter eventCreator) : base(pageTitle)
         {
             _eventCreator = eventCreator;
             SeasonYear = seasonYear;

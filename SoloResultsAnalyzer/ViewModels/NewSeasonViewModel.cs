@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,38 +10,33 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     class NewSeasonViewModel : ViewModelBase
     {
-        public DataTable Events { get; set; }
+        DbConnection _dbConnection;
+        Processors.EventAdapter _eventAdapter;
 
-        private Processors.EventCreator _eventCreator;
-
-        public NewSeasonViewModel(string pageTitle, Processors.EventCreator eventCreator) : base(pageTitle)
+        public NewSeasonViewModel(string pageTitle, ref DbConnection dbConnection, Processors.EventAdapter eventAdapter) : base (pageTitle)
         {
-            _eventCreator = eventCreator;
+            _dbConnection = dbConnection;
+            _eventAdapter = eventAdapter;
         }
 
-        public override void Update()
-        {
-            Events = _eventCreator.GetEventDataTable();
-        }
-
-        public ICommand Save
+        public ICommand SelectDatabase
         {
             get
             {
                 return new DelegateCommand(o =>
                 {
-                    _eventCreator.Update(Events);
+
                 });
             }
         }
 
-        public ICommand NewSeason
+        public ICommand StartNewSeason
         {
             get
             {
                 return new DelegateCommand(o =>
                 {
-                    // TODO
+
                 });
             }
         }

@@ -21,6 +21,7 @@ namespace SoloResultsAnalyzer
         private ViewModelBase _eventReportViewModel;
         private ViewModelBase _championshipReportViewModel;
         private ViewModelBase _driversViewModel;
+        private ViewModelBase _editSeasonViewModel;
         private ViewModelBase _newSeasonViewModel;
 
         // Settings object for managing program state
@@ -32,7 +33,7 @@ namespace SoloResultsAnalyzer
         // Event data file parser
         private Processors.IFileParser _fileParser = new Processors.ProntoFileParser();
 
-        private Processors.EventCreator _eventCreator;
+        private Processors.EventAdapter _eventAdapter;
 
         private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
         //private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
@@ -48,17 +49,29 @@ namespace SoloResultsAnalyzer
         {
             InitializeComponent();
 
+            if (!_appSettings.LoadFromFile(Settings.SettingsPath + Settings.SettingsFile))
+            {
+                MessageBox.Show("Unable to load settings file. Creating default.");
+
+                _appSettings.CreateDefaultFile();
+            }
+
+            if (_appSettings.CurrentDatabase == string.Empty)
+            {
+
+            }
+
             _dbConnection = new SqlConnection(_dbConnectionString);
 
-            _eventCreator = new Processors.EventCreator(_dbConnection);
+            _eventAdapter = new Processors.EventAdapter(_dbConnection);
 
             // Initialize view models
-            _homeViewModel = new HomeViewModel("Home", _seasonYear, _eventCreator);
+            _homeViewModel = new HomeViewModel("Home", _seasonYear, _eventAdapter);
             _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _seasonYear, _eventNumber);
             _eventReportViewModel = new EventReportViewModel("Create Event Reports");
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
             _driversViewModel = new DriversViewModel("View Drivers", _dbConnection);
-            _newSeasonViewModel = new NewSeasonViewModel("Start New Season", _eventCreator);
+            _editSeasonViewModel = new EditSeasonViewModel("Edit Current Season", _eventAdapter);
 
             // Set initial view model
             CurrentViewModel = _homeViewModel;
@@ -70,6 +83,7 @@ namespace SoloResultsAnalyzer
             _eventReportViewModel.PropertyChanged += _viewModel_PropertyChanged;
             _championshipReportViewModel.PropertyChanged += _viewModel_PropertyChanged;
             _driversViewModel.PropertyChanged += _viewModel_PropertyChanged;
+            _editSeasonViewModel.PropertyChanged += _viewModel_PropertyChanged;
             _newSeasonViewModel.PropertyChanged += _viewModel_PropertyChanged;
 
             // Set data context to this class
@@ -77,15 +91,6 @@ namespace SoloResultsAnalyzer
 
             // Setup log file
             _appLog = NLog.LogManager.GetLogger(GetType().Name);
-
-            // Load setup file
-            if (!_appSettings.LoadFromFile(Settings.SettingsPath + Settings.SettingsFile))
-            {
-                MessageBox.Show("Unable to load settings file.");
-
-                // Create the settings file for future use
-                _appSettings.CreateDefaultFile();
-            }
         }
 
         /// <summary>
@@ -116,6 +121,9 @@ namespace SoloResultsAnalyzer
                         CurrentViewModel = _driversViewModel;
                         break;
                     case "NewSeasonViewModel":
+                        CurrentViewModel = _editSeasonViewModel;
+                        break;
+                    case "EditSeasonViewModel":
                         CurrentViewModel = _newSeasonViewModel;
                         break;
                     default:
