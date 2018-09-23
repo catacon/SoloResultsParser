@@ -41,6 +41,9 @@ namespace SoloResultsAnalyzer
         // Database connection for event data
         private DbConnection _dbConnection;
 
+        // Report generator
+        private Processors.ReportGenerator _reportGenerator;
+
         private int _seasonYear = 2018;
 
         private int _eventNumber = 7;
@@ -63,15 +66,18 @@ namespace SoloResultsAnalyzer
 
             _dbConnection = new SqlConnection(_dbConnectionString);
 
+            _reportGenerator = new Processors.ReportGenerator(_dbConnection);
+
             _eventAdapter = new Processors.EventAdapter(_dbConnection);
 
             // Initialize view models
             _homeViewModel = new HomeViewModel("Home", _seasonYear, _eventAdapter);
             _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _seasonYear, _eventNumber);
-            _eventReportViewModel = new EventReportViewModel("Create Event Reports");
+            _eventReportViewModel = new EventReportViewModel("Create Event Reports", _eventAdapter, _reportGenerator);
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
             _driversViewModel = new DriversViewModel("View Drivers", _dbConnection);
             _editSeasonViewModel = new EditSeasonViewModel("Edit Current Season", _eventAdapter);
+            _newSeasonViewModel = new NewSeasonViewModel("New Season", ref _dbConnection, _eventAdapter);
 
             // Set initial view model
             CurrentViewModel = _homeViewModel;

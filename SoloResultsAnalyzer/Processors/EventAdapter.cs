@@ -47,6 +47,18 @@ namespace SoloResultsAnalyzer.Processors
             return table;
         }
 
+        public List<Models.Event> GetEventList()
+        {
+            return GetEventDataTable().AsEnumerable().Select(m => new Models.Event()
+            {
+                Id = m.Field<int>("Id"),
+                Season = m.Field<int>("Season"),
+                EventNumber = m.Field<int>("EventNumber"),
+                Date = m.Field<DateTime>("Date"),
+                Location = m.Field<string>("Location")
+            }).ToList();
+        }
+
         public void Update(DataTable table)
         {
             _adapter.Update(table);

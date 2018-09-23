@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>jsreport.Types</name>
+    </assembly>
+    <members>
+        <member name="P:jsreport.Types.Phantom.Margin">
+            <summary>
+            Paper margin like 2cm, see phantom doc for details http://phantomjs.org/
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.Header">
+            <summary>
+            Html used for page header, you can use special tags to insert page numbers: {#pageNum}/{#numPages}
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.HeaderHeight">
+            <summary>
+            Height of header like 2cm
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.Footer">
+            <summary>
+            Html used for page footer, you can use special tags to insert page numbers: {#pageNum}/{#numPages}
+            </summary> 
+        </member>
+        <member name="P:jsreport.Types.Phantom.FooterHeight">
+            <summary>
+            Height of footer like 2cm
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.Orientation">
+            <summary>
+            Paper orientation, possible values "landscape" and "portrait"
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.Format">
+            <summary>
+            Paper format, possible values "A5", "A4", "A3", "Letter", "Tabloid", "Legal"
+            width or height specification takes precedence
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.Width">
+            <summary>
+            Paper width like 2cm
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.Height">
+            <summary>
+            Paper height like 2cm
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.PrintDelay">
+            <summary>
+            Milliseconds to wait for js rendering like 1000
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.BlockJavaScript">
+            <summary>
+            Block all the javascript on the page
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.WaitForJS">
+            <summary>
+            The printing waits for the trigger, see http://jsreport.net/learn/phantom-pdf
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Phantom.ResourceTimeout">
+            <summary>
+            Timeout for external resources like scripts or css load
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Template.Shortid">
+            <summary>
+            Unique 9 alfanum id
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Template.Content">
+            <summary>
+            Content of report, most often this is html with javasript templating engines
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Template.Helpers">
+            <summary>
+            Javascript helper functions in format: function a() { }; function b() { };
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Template.Engine">
+            <summary>
+            Used javascript templating engine like "jsrender" or "handlebars"
+            </summary>  
+        </member>
+        <member name="P:jsreport.Types.Template.Recipe">
+            <summary>
+            Used recipe defining rendering process like "html", "phantom-pdf" or "fop"
+            </summary> 
+        </member>
+        <member name="P:jsreport.Types.Template.Name">
+            <summary>
+            Readable name, does not need to be unique
+            </summary>
+        </member>
+        <member name="T:jsreport.Types.Report">
+            <summary>
+            Output of jsreport rendering process
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.Report.Content">
+            <summary>
+            Stream with report
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.ReportMeta.Logs">
+            <summary>
+            Logs produced during rendering. 
+            Filled only when RenderingRequest.Options.Debug.LogsToResponseHeader=true
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.ReportMeta.ContentType">
+            <summary>
+            Report content type like application/pdf
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.ReportMeta.FileExtension">
+            <summary>
+            Report file extension like "html" or "pdf"
+            </summary>
+        </member>
+        <member name="P:jsreport.Types.ReportMeta.ContentDisposition">
+            <summary>
+            The header which can be used when sending to the browser client
+            </summary>
+        </member>
+    </members>
+</doc>

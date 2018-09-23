@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace SoloResultsAnalyzer.ViewModels
 {
-    class NewSeasonViewModel : ViewModelBase
+    public class NewSeasonViewModel : ViewModelBase
     {
         DbConnection _dbConnection;
         Processors.EventAdapter _eventAdapter;

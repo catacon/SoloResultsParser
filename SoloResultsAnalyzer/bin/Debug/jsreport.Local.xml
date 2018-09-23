@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>jsreport.Local</name>
+    </assembly>
+    <members>
+        <member name="T:jsreport.Local.LocalReporting">
+            <summary>
+            Builder for local reporting service
+            </summary>
+        </member>
+        <member name="M:jsreport.Local.LocalReporting.Configure(System.Func{jsreport.Types.Configuration,jsreport.Types.Configuration})">
+            <summary>
+            Use lambda function to configure additional jsreport properties
+            </summary>        
+        </member>
+        <member name="M:jsreport.Local.LocalReporting.RunInDirectory(System.String)">
+            <summary>
+            The jsreport.exe runs by default in bin/jsreport working directory
+            This can be used to run for example from the VS project where the templates are stored
+            </summary>
+            <example>
+            LocalReporting()
+                .UseBinary(JsReportBinary.GetStream())        
+                .RunInDirectory(Path.Combine(Directory.GetCurrentDirectory(), "jsreport"))
+            </example>
+            <param name="cwd"></param>        
+        </member>
+        <member name="M:jsreport.Local.LocalReporting.KillRunningJsReportProcesses">
+            <summary>
+            Kill all previously running jsreport orphan processes.
+            This usefull mainly when running local jsreport web server in debug, because VS doesn't properly unload 
+            program domains and doesn't kill child jsreport processes.
+            </summary>        
+        </member>
+        <member name="M:jsreport.Local.LocalReporting.AsWebServer">
+            <summary>
+            Run jsreport as additional web server using internaly http requests to render reports
+            </summary>        
+        </member>
+        <member name="M:jsreport.Local.LocalReporting.AsUtility">
+            <summary>
+            Run jsreport as simple command line utility
+            </summary>        
+        </member>
+    </members>
+</doc>
