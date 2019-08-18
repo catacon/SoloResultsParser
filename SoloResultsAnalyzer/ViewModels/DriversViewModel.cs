@@ -79,6 +79,8 @@ namespace SoloResultsAnalyzer.ViewModels
             {
                 command.CommandText = "UPDATE Drivers SET FirstName = @FirstName, LastName = @LastName, IsLadies = @IsLadies, IsNovice = @IsNovice WHERE Id = @Id";
 
+                command.Parameters.Clear();
+
                 Utilities.Extensions.AddParamWithValue(ref command, "FirstName", driver.FirstName);
                 Utilities.Extensions.AddParamWithValue(ref command, "LastName", driver.LastName);
                 Utilities.Extensions.AddParamWithValue(ref command, "IsLadies", driver.IsLadies);
