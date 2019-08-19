@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\obj\Debug\
 SoloResultsAnalyzer
 none
 false
 DEBUG;TRACE
-C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\App.xaml
+A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\App.xaml
 72113559311
 2-1268814395
 34830708032
-96-1102169883
+88-57131369
 MainWindow.xaml;Views\ChampionshipReportView.xaml;Views\DriversView.xaml;Views\EventImportView.xaml;Views\EventReportView.xaml;Views\HomeView.xaml;Views\EditSeasonView.xaml;
 
 False

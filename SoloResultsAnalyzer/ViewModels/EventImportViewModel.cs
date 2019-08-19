@@ -19,9 +19,8 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private bool _importActive = false;
 
-        private int _seasonYear;
-
-        private int _eventNumber;
+        public List<Models.Event> Events { get; } = new List<Models.Event>();
+        public Models.Event _selectedEvent = new Models.Event();
 
         public Result SelectedResult { get; set; }
 
@@ -35,6 +34,20 @@ namespace SoloResultsAnalyzer.ViewModels
             set
             {
                 _dataImporter.EventResults = value;
+            }
+        }
+
+        public Models.Event SelectedEvent
+        {
+            get
+            {
+                return _selectedEvent;
+            }
+
+            set
+            {
+                _selectedEvent = value;
+                OnPropertyChanged("SelectedEvent");
             }
         }
 
@@ -73,11 +86,11 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
-        public EventImportViewModel(string pageTitle, IFileParser fileParser, DbConnection dbConnection, int seasonYear, int eventNumber) : base(pageTitle)
+        public EventImportViewModel(string pageTitle, IFileParser fileParser, DbConnection dbConnection, Processors.EventAdapter adapter) : base(pageTitle)
         {
+            Events = adapter.GetEventList();
+            _selectedEvent = Events.First();
             _dataImporter = new EventDataImporter(fileParser, dbConnection);
-            _seasonYear = seasonYear;
-            _eventNumber = eventNumber;
         }
 
         // TODO better name?
@@ -130,7 +143,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private void SaveData()
         {
-            if (_dataImporter.SaveData(_seasonYear, _eventNumber))
+            if (_dataImporter.SaveData(_selectedEvent.Season, _selectedEvent.Id))
             {
                 MessageBox.Show("Event data saved to database successfully!");
             }

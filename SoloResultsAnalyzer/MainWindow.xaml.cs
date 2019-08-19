@@ -35,7 +35,7 @@ namespace SoloResultsAnalyzer
 
         private Processors.EventAdapter _eventAdapter;
 
-        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"C:\Users\Aaron\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
+        private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
         //private readonly string _dbConnectionString = string.Format(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={0};Integrated Security=True;Connect Timeout=30", @"F:\Users\ahall\Projects\SoloResultsParser\SoloResultsAnalyzer\SoloResults.mdf");
 
         // Database connection for event data
@@ -72,7 +72,7 @@ namespace SoloResultsAnalyzer
 
             // Initialize view models
             _homeViewModel = new HomeViewModel("Home", _seasonYear, _eventAdapter);
-            _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _seasonYear, _eventNumber);
+            _eventImportViewModel = new EventImportViewModel("Import Event Data", _fileParser, _dbConnection, _eventAdapter);
             _eventReportViewModel = new EventReportViewModel("Create Event Reports", _eventAdapter, _reportGenerator);
             _championshipReportViewModel = new ChampionshipReportViewModel("Create Championship Reports");
             _driversViewModel = new DriversViewModel("View Drivers", _dbConnection);

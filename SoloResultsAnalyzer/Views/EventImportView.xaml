@@ -12,19 +12,39 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="15*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         
-        <WrapPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <WrapPanel Grid.Column="0" Grid.RowSpan="2" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center">
             <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" Margin="10" Padding="5" />
             <Button Width="50" Height="50"  Content="Import" Command="{Binding Import}" Margin="10" Padding="5" />
             <Button Width="50" Height="50"  Content="Cancel" Command="{Binding Cancel}" Margin="10" Padding="5" />
             <Button Width="50" Height="50"  Content="Save" Command="{Binding Save}" Margin="10" Padding="5" />
         </WrapPanel>
-        <DataGrid Grid.Column="1" ItemsSource="{Binding Path=EventResults, IsAsync=True}" 
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="Event: " VerticalAlignment="Center" />
+            <ComboBox VerticalAlignment="Center" ItemsSource="{Binding Events}" SelectedItem="{Binding SelectedEvent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Event #{0} - {1:MM/dd} - {2}">
+                                    <Binding Path="EventNumber" />
+                                    <Binding Path="Date" />
+                                    <Binding Path="Location" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+
+        <DataGrid Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=EventResults, IsAsync=True}" 
                   AutoGenerateColumns="False" SelectionMode="Single" CanUserDeleteRows="False" CanUserAddRows="False"
                   CanUserResizeRows="False"
                   AlternationCount="2" AlternatingRowBackground="AliceBlue"
