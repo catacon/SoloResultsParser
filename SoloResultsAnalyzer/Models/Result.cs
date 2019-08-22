@@ -6,6 +6,7 @@ namespace SoloResultsAnalyzer.Models
 {
     public class Result
     {
+        public int EventId { get; set; }
         public string Car { get; set; }
         public string ClassString { get; set; }
         public int ClassId { get; set; }

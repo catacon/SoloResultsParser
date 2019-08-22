@@ -1,0 +1,60 @@
+<style>
+{#asset EventPaxReport.css @encoding=utf8}
+</style>
+
+<div class="results">
+    <div class="title">
+        St. Louis Region SCCA Solo<br />
+        {{year}} PAX Results - Event #{{event_num}} - {{date}}
+    </div>
+    <br />
+    <table>
+        <tr>
+        <th>PAX Pos</th>
+        <th>Class</th>
+        <th>#</th>
+        <th>Driver</th>
+        <th>Car</th>
+        <th class="right-align">Best Run</th>
+        <th class="right-align">PAX Time</th>
+        <th class="right-align">Diff</th>
+        <th class="right-align">From 1st</th>
+        <th class="right-align">Points</th>
+        </tr>
+        {{#each drivers}}
+        <tr>
+            <td class="right-align">
+                {{pos}}
+            </td>
+            <td>
+                {{class_name}}
+            </td>
+            <td class="right-align">
+                {{number}}
+            </td>
+            <td>
+                {{name}}
+            </td>
+            <td>
+                {{car}}
+            </td>
+            <td class="right-align">
+                {{best_run}}
+            </td>
+            <td class="right-align">
+                {{pax_time}}
+            </td>
+            <td class="right-align">
+                {{diff}}
+            </td>
+            <td class="right-align">
+                {{from_first}}
+            </td>
+            <td class="right-align">
+                {{points}}
+            </td>
+        </tr>
+        {{/each}}
+        
+    </table>
+</div>

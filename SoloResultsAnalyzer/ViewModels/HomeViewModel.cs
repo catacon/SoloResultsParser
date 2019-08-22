@@ -56,6 +56,14 @@ namespace SoloResultsAnalyzer.ViewModels
             }
         }
 
+        public ICommand EditSeason
+        {
+            get
+            {
+                return SetNextViewModel("EditSeasonViewModel");
+            }
+        }
+
         public ICommand NewSeason
         {
             get

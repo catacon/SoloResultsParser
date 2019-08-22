@@ -23,6 +23,9 @@
                     <View:DriversView />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type VM:EditSeasonViewModel}">
+                    <View:EditSeasonView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type VM:NewSeasonViewModel}">
                     <View:NewSeasonView />
                 </DataTemplate>
             </ContentPresenter.Resources>

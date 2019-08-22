@@ -15,14 +15,14 @@ namespace SoloResultsAnalyzer.Processors
 
         private DbDataAdapter _adapter;
 
-        public EventAdapter(DbConnection dbConnection)
+        public EventAdapter(DbConnection dbConnection, int seasonId)
         {
             _dbConnection = dbConnection;
 
-            InitializeAdapter();
+            InitializeAdapter(seasonId);
         }
 
-        private void InitializeAdapter()
+        private void InitializeAdapter(int seasonId)
         {
             var factory = DbProviderFactories.GetFactory(_dbConnection);
             _adapter = factory.CreateDataAdapter();
@@ -30,8 +30,9 @@ namespace SoloResultsAnalyzer.Processors
             builder.DataAdapter = _adapter;
 
             var selectCommand = factory.CreateCommand();
-            selectCommand.CommandText = "SELECT * FROM Events";
+            selectCommand.CommandText = "SELECT * FROM Events WHERE SeasonId = @SeasonId";
             selectCommand.Connection = _dbConnection;
+            Utilities.Extensions.AddParamWithValue(ref selectCommand, "SeasonId", seasonId);
 
             _adapter.SelectCommand = selectCommand;
             _adapter.InsertCommand = builder.GetInsertCommand();
@@ -44,19 +45,33 @@ namespace SoloResultsAnalyzer.Processors
             DataTable table = new DataTable();
             _adapter.Fill(table);
 
+            // TODO make default SeasonId match current season
+            table.Columns["SeasonId"].DefaultValue = 1;
+
+            table.Columns["Points"].DefaultValue = true;
+
             return table;
         }
 
         public List<Models.Event> GetEventList()
         {
-            return GetEventDataTable().AsEnumerable().Select(m => new Models.Event()
+            var list = GetEventDataTable().AsEnumerable().Select(m => new Models.Event()
             {
                 Id = m.Field<int>("Id"),
-                Season = m.Field<int>("Season"),
+                SeasonId = m.Field<int>("SeasonId"),
                 EventNumber = m.Field<int>("EventNumber"),
                 Date = m.Field<DateTime>("Date"),
                 Location = m.Field<string>("Location")
             }).ToList();
+
+
+            // TODO handle no events in season
+            if (list.Count == 0)
+            {
+                list.Add(new Models.Event());
+            }
+
+            return list;
         }
 
         public void Update(DataTable table)

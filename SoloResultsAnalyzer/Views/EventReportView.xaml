@@ -17,7 +17,6 @@
         <WrapPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Vertical">
             <Button Width="50" Height="50"  Content="Home" Command="{Binding Home}" Margin="20" Padding="5" />
         </WrapPanel>
-
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
             <ComboBox ItemsSource="{Binding Events}" SelectedItem="{Binding SelectedEvent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBox.ItemTemplate>
@@ -34,7 +33,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            
+
             <Button Width="100" Height="50" Content="Generate Report" Command="{Binding GenerateReport}" Margin="0,5,0,0"/>
         </StackPanel>
 

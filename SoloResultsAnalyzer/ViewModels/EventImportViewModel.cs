@@ -15,11 +15,13 @@ namespace SoloResultsAnalyzer.ViewModels
 {
     public class EventImportViewModel : ViewModelBase
     {
+        private Processors.EventAdapter _eventAdapter;
+
         private EventDataImporter _dataImporter;
 
         private bool _importActive = false;
 
-        public List<Models.Event> Events { get; } = new List<Models.Event>();
+        public List<Models.Event> Events { get; private set; } = new List<Models.Event>();
         public Models.Event _selectedEvent = new Models.Event();
 
         public Result SelectedResult { get; set; }
@@ -88,6 +90,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         public EventImportViewModel(string pageTitle, IFileParser fileParser, DbConnection dbConnection, Processors.EventAdapter adapter) : base(pageTitle)
         {
+            _eventAdapter = adapter;
             Events = adapter.GetEventList();
             _selectedEvent = Events.First();
             _dataImporter = new EventDataImporter(fileParser, dbConnection);
@@ -143,7 +146,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
         private void SaveData()
         {
-            if (_dataImporter.SaveData(_selectedEvent.Season, _selectedEvent.Id))
+            if (_dataImporter.SaveData(_selectedEvent.Id))
             {
                 MessageBox.Show("Event data saved to database successfully!");
             }
@@ -153,6 +156,12 @@ namespace SoloResultsAnalyzer.ViewModels
             }
 
             _importActive = false;
+        }
+
+        public override void Update()
+        {
+            Events = _eventAdapter.GetEventList();
+            _selectedEvent = Events.First();
         }
     }
 }

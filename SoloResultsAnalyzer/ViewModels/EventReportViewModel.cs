@@ -6,17 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Newtonsoft.Json;
 
 namespace SoloResultsAnalyzer.ViewModels
 {
     class EventReportViewModel : ViewModelBase
     {
-        public List<Models.Event> Events { get; } = new List<Models.Event>();
+        public List<Models.Event> Events { get; private set; } = new List<Models.Event>();
         public Models.Event _selectedEvent = new Models.Event();
         private Processors.ReportGenerator _reportGenerator;
+        private Processors.EventAdapter _eventAdapter;
 
         public EventReportViewModel(string pageTitle, Processors.EventAdapter adapter, Processors.ReportGenerator reportGenerator) : base(pageTitle)
         {
+            _eventAdapter = adapter;
             Events = adapter.GetEventList();
             _selectedEvent = Events.First();
             _reportGenerator = reportGenerator;
@@ -45,6 +48,12 @@ namespace SoloResultsAnalyzer.ViewModels
                     _reportGenerator.GenerateEventReport(_selectedEvent.Id);
                 });
             }
+        }
+
+        public override void Update()
+        {
+            Events = _eventAdapter.GetEventList();
+            _selectedEvent = Events.First();
         }
     }
 }

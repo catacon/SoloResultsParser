@@ -128,14 +128,14 @@ namespace SoloResultsAnalyzer.Processors
             _dbConnection.Close();
         }
 
-        public bool SaveData(int seasonYear, int eventNumber)
+        public bool SaveData(int eventId)
         {
             // Open database
             _dbConnection.Open();
 
             foreach (Models.Result currentResult in _eventResults)
             {
-                int resultId = InsertResult(currentResult, seasonYear, eventNumber);
+                int resultId = InsertResult(currentResult, eventId);
 
                 InsertRuns(currentResult.Runs, resultId);
 
@@ -147,12 +147,12 @@ namespace SoloResultsAnalyzer.Processors
             return true;
         }
 
-        private int InsertResult(Models.Result result, int seasonYear, int eventNumber)
+        private int InsertResult(Models.Result result, int eventId)
         {
             int resultId = 0;
 
             // Insert result into database                  
-            using (DbCommand resultInsertCommand = CreateResultInsertCommand(result, seasonYear, eventNumber))
+            using (DbCommand resultInsertCommand = CreateResultInsertCommand(result, eventId))
             {
                 // Execute insert command
                 resultId = (int)resultInsertCommand.ExecuteScalar();
@@ -203,25 +203,21 @@ namespace SoloResultsAnalyzer.Processors
             }
         }
 
-        private DbCommand CreateResultInsertCommand(Models.Result result, int seasonYear, int eventNumber)
+        private DbCommand CreateResultInsertCommand(Models.Result result, int eventId)
         {
             DbCommand resultInsertCommand = _dbConnection.CreateCommand();
 
-            resultInsertCommand.CommandText = "INSERT INTO Results (Season,Event,FirstName,LastName,Car,Class,Number,RawTime,PaxTime,IsLadies,IsNovice) " +
+            resultInsertCommand.CommandText = "INSERT INTO Results (EventId,DriverId,Car,Class,Number,RawTime,PaxTime) " +
                                     "OUTPUT INSERTED.ID " +
-                                    "VALUES (@Season,@Event,@FirstName,@LastName,@Car,@Class,@Number,@RawTime,@PaxTime,@IsLadies,@IsNovice)";
+                                    "VALUES (@EventId,@DriverId,@Car,@Class,@Number,@RawTime,@PaxTime)";
 
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Season", seasonYear);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Event", eventNumber);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@FirstName", result.DriverInfo.FirstName);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@LastName", result.DriverInfo.LastName);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@EventId", eventId);
+            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@DriverId", result.DriverInfo.Id);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Car", result.Car);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Class", result.ClassId);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@Number", result.ClassNumber);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@RawTime", result.RawTime);
             Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@PaxTime", result.PaxTime);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsLadies", result.DriverInfo.IsLadies ? 1 : 0);
-            Utilities.Extensions.AddParamWithValue(ref resultInsertCommand, "@IsNovice", result.DriverInfo.IsNovice ? 1 : 0);
 
             return resultInsertCommand;
         }
@@ -269,8 +265,9 @@ namespace SoloResultsAnalyzer.Processors
         { 
             DbCommand driverInsertQuery = _dbConnection.CreateCommand();
 
-            driverInsertQuery.CommandText = "INSERT INTO Drivers (FirstName, LastName, IsLadies, IsNovice) VALUES (@FirstName, @LastName, @IsLadies, @IsNovice)"; ;
+            driverInsertQuery.CommandText = "INSERT INTO Drivers (SeasonId, FirstName, LastName, IsLadies, IsNovice) VALUES (@SeasonId, @FirstName, @LastName, @IsLadies, @IsNovice)"; ;
 
+            Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "SeasonId", driverInfo.SeasonId);
             Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "FirstName", driverInfo.FirstName);
             Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "LastName", driverInfo.LastName);
             Utilities.Extensions.AddParamWithValue(ref driverInsertQuery, "IsLadies", driverInfo.IsLadies);

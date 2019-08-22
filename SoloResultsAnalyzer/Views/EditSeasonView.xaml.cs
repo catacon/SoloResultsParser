@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace SoloResultsAnalyzer.Views
 {
     /// <summary>
-    /// Interaction logic for NewSeasonView.xaml
+    /// Interaction logic for EditSeasonView.xaml
     /// </summary>
-    public partial class NewSeasonView : UserControl
+    public partial class EditSeasonView : UserControl
     {
-        public NewSeasonView()
+        public EditSeasonView()
         {
             InitializeComponent();
         }

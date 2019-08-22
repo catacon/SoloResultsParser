@@ -1,0 +1,51 @@
+table {
+    
+    font-size: 8pt;
+    border-collapse: collapse;
+    width: 100%;
+	page-break-inside: auto;
+
+}
+
+td {
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+    padding: 3px;
+}
+
+tr {
+	page-break-inside:avoid;
+	page-break-after:auto;
+}
+
+tr:nth-child(even) {
+    background-color: #ffe699;
+}
+
+th {
+    text-align: left;
+    border-bottom: solid 1px #000;
+    font-weight: bold;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.results {
+    width:90%; 
+    margin-left:5%; 
+    margin-right:5%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.title {
+    color: #0070C0;
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+}

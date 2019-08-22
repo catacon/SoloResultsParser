@@ -1,0 +1,21 @@
+{
+    "shortid": "rJlIiq3cNS",
+    "name": "EventPaxReport",
+    "recipe": "chrome-pdf",
+    "engine": "handlebars",
+    "chrome": {
+        "printBackground": true
+    },
+    "creationDate": "2019-08-21T12:39:13.506Z",
+    "modificationDate": {
+        "$$date": 1566441180237
+    },
+    "_id": "uYkTVO6mmmMhZo83",
+    "$entitySet": "templates",
+    "folder": {
+        "shortid": "1cN8V9"
+    },
+    "data": {
+        "shortid": "ByeuG3n9NB"
+    }
+}

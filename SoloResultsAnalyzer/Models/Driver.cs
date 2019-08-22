@@ -9,12 +9,27 @@ namespace SoloResultsAnalyzer.Models
 {
     public class Driver : INotifyPropertyChanged
     {
+        public int _seasonId;
         public string _firstName;
         public string _lastName;
         public bool _isLadies;
         public bool _isNovice;
         public bool _driverExists;
         public int Id { get; set; }
+
+        public int SeasonId
+        {
+            get
+            {
+                return _seasonId;
+            }
+
+            set
+            {
+                _seasonId = value;
+                OnPropertyChanged("SeasonId");
+            }
+        }
 
         public string FirstName
         {

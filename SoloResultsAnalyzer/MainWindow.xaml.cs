@@ -45,8 +45,7 @@ namespace SoloResultsAnalyzer
         private Processors.ReportGenerator _reportGenerator;
 
         private int _seasonYear = 2018;
-
-        private int _eventNumber = 7;
+        private int _seasonId = 1;
 
         public MainWindow()
         {
@@ -68,7 +67,7 @@ namespace SoloResultsAnalyzer
 
             _reportGenerator = new Processors.ReportGenerator(_dbConnection);
 
-            _eventAdapter = new Processors.EventAdapter(_dbConnection);
+            _eventAdapter = new Processors.EventAdapter(_dbConnection, _seasonId);
 
             // Initialize view models
             _homeViewModel = new HomeViewModel("Home", _seasonYear, _eventAdapter);
@@ -127,10 +126,10 @@ namespace SoloResultsAnalyzer
                         CurrentViewModel = _driversViewModel;
                         break;
                     case "NewSeasonViewModel":
-                        CurrentViewModel = _editSeasonViewModel;
+                        CurrentViewModel = _newSeasonViewModel;
                         break;
                     case "EditSeasonViewModel":
-                        CurrentViewModel = _newSeasonViewModel;
+                        CurrentViewModel = _editSeasonViewModel;
                         break;
                     default:
                         // Do nothing

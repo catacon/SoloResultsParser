@@ -46,7 +46,7 @@ namespace SoloResultsAnalyzer.ViewModels
 
             using (DbCommand command = _dbConnection.CreateCommand())
             {
-                command.CommandText = "SELECT * FROM Drivers";
+                command.CommandText = "SELECT * FROM Drivers";  // TODO add season ID
 
                 var reader = command.ExecuteReader();
 
@@ -60,6 +60,7 @@ namespace SoloResultsAnalyzer.ViewModels
                     driver.IsLadies = (bool)reader["IsLadies"];
                     driver.IsNovice = (bool)reader["IsNovice"];
                     driver.Id = (int)reader["Id"];
+                    driver.SeasonId = (int)reader["SeasonId"];
                     driver.DriverExists = true;
 
                     Drivers.Add(driver);

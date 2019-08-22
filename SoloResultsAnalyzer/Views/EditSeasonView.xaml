@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SoloResultsAnalyzer.Views.NewSeasonView"
+﻿<UserControl x:Class="SoloResultsAnalyzer.Views.EditSeasonView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,11 +20,17 @@
             <Button Width="50" Height="50"  Content="New Season" Command="{Binding NewSeason}" Margin="20" Padding="5" />
         </WrapPanel>
         <DataGrid Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Path=Events, IsAsync=True}" 
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   SelectionMode="Single" CanUserDeleteRows="True" CanUserAddRows="True"
                   CanUserResizeRows="False"
-                  AlternationCount="2" AlternatingRowBackground="AliceBlue"
-                  SelectedItem="{Binding SelectedEvent}">
+                  AlternationCount="2" AlternatingRowBackground="AliceBlue">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Event Number" Binding="{Binding EventNumber, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" Width="*" />
+                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" Width="*" />
+                <DataGridTextColumn Header="Location" Binding="{Binding Location, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" Width="*" />
+                <DataGridCheckBoxColumn Header="Points" Binding="{Binding Points, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>

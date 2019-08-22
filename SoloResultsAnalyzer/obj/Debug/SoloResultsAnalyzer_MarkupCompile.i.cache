@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 A:\Projects\Autocross\SoloResultsParser\SoloResultsAnalyzer\App.xaml
-72113559311
+8903339886
 2-1268814395
-38-564190804
-88-57131369
-MainWindow.xaml;Views\ChampionshipReportView.xaml;Views\DriversView.xaml;Views\EventImportView.xaml;Views\EventReportView.xaml;Views\HomeView.xaml;Views\EditSeasonView.xaml;
+401063268503
+81-210279110
+MainWindow.xaml;Views\ChampionshipReportView.xaml;Views\DriversView.xaml;Views\EventImportView.xaml;Views\EventReportView.xaml;Views\HomeView.xaml;Views\EditSeasonView.xaml;Views\NewSeasonView.xaml;
 
-True
+False
 

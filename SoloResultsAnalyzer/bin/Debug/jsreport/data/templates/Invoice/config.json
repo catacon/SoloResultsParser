@@ -1,12 +1,17 @@
 {
     "shortid": "rkJTnK2ce",
-    "recipe": "phantom-pdf",
+    "recipe": "chrome-pdf",
     "engine": "handlebars",
     "data": {
         "shortid": "Sy5S19ncg"
     },
     "modificationDate": {
-        "$$date": 1498738932509
+        "$$date": 1566391408798
     },
-    "_id": "ulCoekcPKjgTxGLV"
+    "_id": "ulCoekcPKjgTxGLV",
+    "$entitySet": "templates",
+    "name": "Invoice",
+    "folder": {
+        "shortid": "1cN8V9"
+    }
 }
